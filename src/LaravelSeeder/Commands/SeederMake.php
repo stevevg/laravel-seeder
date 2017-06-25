@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class SeederMake extends Command
 {
-    const DATABASE_SEEDER_STUB_PATH = __DIR__ . '/../../stubs/DatabaseSeeder.stub';
+    const DATABASE_SEEDER_STUB_PATH = __DIR__ . '/../../../stubs/DatabaseSeeder.stub';
 
     use DetectsApplicationNamespace;
 

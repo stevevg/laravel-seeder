@@ -59,7 +59,7 @@ class SeederMake extends Command
 
         // File name
         $created = date('Y_m_d_His');
-        $path .= "/seed_{$created}_{$model}Seeder.php";
+        $path .= "/{$created}_{$model}Seeder.php";
 
         // Content
         $namespace = rtrim($this->getAppNamespace(), '\\');

@@ -3,12 +3,19 @@
 namespace Eighty8\LaravelSeeder;
 
 use App;
+use Eighty8\LaravelSeeder\Commands\DbSeedOverride;
+use Eighty8\LaravelSeeder\Commands\SeederInstall;
+use Eighty8\LaravelSeeder\Commands\SeederMake;
+use Eighty8\LaravelSeeder\Commands\SeederRefresh;
+use Eighty8\LaravelSeeder\Commands\SeederReset;
+use Eighty8\LaravelSeeder\Commands\SeederRollback;
+use Eighty8\LaravelSeeder\Commands\SeederRun;
 use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
 {
-    const SEEDERS_CONFIG_PATH = '/../../config/seeders.php';
-    
+    const SEEDERS_CONFIG_PATH = '../../config/seeders.php';
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -24,7 +31,7 @@ class SeederServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . self::SEEDERS_CONFIG_PATH => config_path('seeders.php'),
+            __DIR__ . '/' . self::SEEDERS_CONFIG_PATH => config_path('seeders.php'),
         ]);
     }
 
@@ -36,7 +43,7 @@ class SeederServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . self::SEEDERS_CONFIG_PATH, 'seeds'
+            __DIR__ . self::SEEDERS_CONFIG_PATH, 'seeders'
         );
 
         $this->app->singleton('seeder.repository', function ($app) {
@@ -44,35 +51,35 @@ class SeederServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('seeder.migrator', function ($app) {
-            return new SeedMigrator($app['seeder.repository'], $app['db'], $app['files']);
-        });
-
-        $this->app->bind('command.seeder', function ($app) {
-            return new SeedOverrideCommand($app['seeder.migrator']);
+            return new SeederMigrator($app['seeder.repository'], $app['db'], $app['files']);
         });
 
         $this->app->bind('seeder.run', function ($app) {
-            return new SeedCommand($app['seeder.migrator']);
+            return new SeederRun($app['seeder.migrator']);
         });
 
         $this->app->bind('seeder.install', function ($app) {
-            return new SeedInstallCommand($app['seeder.repository']);
+            return new SeederInstall($app['seeder.repository']);
         });
 
         $this->app->bind('seeder.make', function () {
-            return new SeedMakeCommand();
+            return new SeederMake();
         });
 
         $this->app->bind('seeder.reset', function ($app) {
-            return new SeedResetCommand($app['seeder.migrator']);
+            return new SeederReset($app['seeder.migrator']);
         });
 
         $this->app->bind('seeder.rollback', function ($app) {
-            return new SeedRollbackCommand($app['seeder.migrator']);
+            return new SeederRollback($app['seeder.migrator']);
         });
 
         $this->app->bind('seeder.refresh', function () {
-            return new SeedRefreshCommand();
+            return new SeederRefresh();
+        });
+
+        $this->app->bind('seeder.override', function ($app) {
+            return new DbSeedOverride($app['seeder.migrator']);
         });
 
         $this->commands([
@@ -95,7 +102,7 @@ class SeederServiceProvider extends ServiceProvider
         return [
             'seeder.repository',
             'seeder.migrator',
-            'command.seeder',
+            'seeder.override',
             'seeder.run',
             'seeder.install',
             'seeder.make',

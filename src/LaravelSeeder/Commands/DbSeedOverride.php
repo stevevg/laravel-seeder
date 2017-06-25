@@ -1,10 +1,11 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
+use Eighty8\LaravelSeeder\SeederMigrator;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedOverrideCommand extends SeedCommand
+class DbSeedOverride extends SeederRun
 {
     /**
      * The console command name.
@@ -16,9 +17,9 @@ class SeedOverrideCommand extends SeedCommand
     /**
      * Constructor.
      *
-     * @param SeedMigrator $migrator [description]
+     * @param SeederMigrator $migrator [description]
      */
-    public function __construct(SeedMigrator $migrator)
+    public function __construct(SeederMigrator $migrator)
     {
         parent::__construct($migrator);
     }

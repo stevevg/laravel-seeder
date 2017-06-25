@@ -1,12 +1,12 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedRefreshCommand extends Command
+class SeederRefresh extends Command
 {
     use ConfirmableTrait;
 
@@ -22,7 +22,7 @@ class SeedRefreshCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Reset and re-run all seeds';
+    protected $description = 'Reset and re-run all seeders';
 
     /**
      * Execute the console command.
@@ -39,7 +39,7 @@ class SeedRefreshCommand extends Command
         $database = $this->input->getOption('database');
         $force = $this->input->getOption('force');
 
-        $this->call('seed:reset', [
+        $this->call('seeder:reset', [
             '--database' => $database,
             '--force' => $force,
             '--env' => $env,
@@ -48,7 +48,7 @@ class SeedRefreshCommand extends Command
         // The refresh command is essentially just a brief aggregate of a few other of
         // the migration commands and just provides a convenient wrapper to execute
         // them in succession. We'll also see if we need to re-seed the database.
-        $this->call('seed:run', [
+        $this->call('seeder:run', [
             '--database' => $database,
             '--force' => $force,
             '--env' => $env,

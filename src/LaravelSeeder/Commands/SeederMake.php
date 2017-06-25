@@ -1,6 +1,6 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
 use Config;
 use File;
@@ -9,7 +9,7 @@ use Illuminate\Console\DetectsApplicationNamespace;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedMakeCommand extends Command
+class SeederMake extends Command
 {
     use DetectsApplicationNamespace;
 
@@ -37,7 +37,7 @@ class SeedMakeCommand extends Command
         $model = ucfirst($this->argument('model'));
         $path = $this->option('path');
         $env = $this->option('env');
-        $stub = File::get(__DIR__ . '/stubs/DatabaseSeeder.stub');
+        $stub = File::get(__DIR__ . '../../stubs/DatabaseSeeder.stub');
 
         // Check path
         if (empty($path)) {

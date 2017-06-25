@@ -1,13 +1,13 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedResetCommand extends Command
+class SeederReset extends Command
 {
     use ConfirmableTrait;
 
@@ -17,12 +17,13 @@ class SeedResetCommand extends Command
      * @var string
      */
     protected $name = 'seeder:reset';
+
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Resets all the seeds in the database';
+    protected $description = 'Resets all the seeders in the database';
 
     /**
      * Migrator.
@@ -30,18 +31,6 @@ class SeedResetCommand extends Command
      * @var object
      */
     private $migrator;
-
-    /**
-     * Constructor.
-     *
-     * @param SeedMigrator $migrator
-     */
-    public function __construct(SeedMigrator $migrator)
-    {
-        parent::__construct();
-
-        $this->migrator = $migrator;
-    }
 
     /**
      * Execute the console command.
@@ -97,7 +86,7 @@ class SeedResetCommand extends Command
                 '--database' => $this->input->getOption('database'),
             ];
 
-            $this->call('seed:install', $options);
+            $this->call('seeder:install', $options);
         }
     }
 

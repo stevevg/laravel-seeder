@@ -10,7 +10,7 @@ use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 
-class SeedMigrator extends Migrator
+class SeederMigrator extends Migrator
 {
     use DetectsApplicationNamespace;
 

@@ -1,11 +1,12 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
+use Eighty8\LaravelSeeder\SeederRepository;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedInstallCommand extends Command
+class SeederInstall extends Command
 {
     /**
      * The console command name.

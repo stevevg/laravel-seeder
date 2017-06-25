@@ -27,8 +27,8 @@
     "henrikbjorn/phpspec-code-coverage": "~0.2"
   },
   "autoload": {
-    "psr-0": {
-      "Eighty8\\LaravelSeeder\\": "src/"
+    "psr-4": {
+      "Eighty8\\LaravelSeeder\\": "src/LaravelSeeder"
     }
   },
   "config": {

@@ -1,13 +1,14 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Commands;
 
+use Eighty8\LaravelSeeder\SeederMigrator;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeedRollbackCommand extends Command
+class SeederRollback extends Command
 {
     use ConfirmableTrait;
 
@@ -34,9 +35,9 @@ class SeedRollbackCommand extends Command
     /**
      * Constructor.
      *
-     * @param SeedMigrator $migrator
+     * @param SeederMigrator $migrator
      */
-    public function __construct(SeedMigrator $migrator)
+    public function __construct(SeederMigrator $migrator)
     {
         parent::__construct();
 

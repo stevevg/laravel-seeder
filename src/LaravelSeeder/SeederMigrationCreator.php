@@ -4,7 +4,7 @@ namespace Eighty8\LaravelSeeder;
 
 use Illuminate\Database\Migrations\MigrationCreator;
 
-class SeedMigrationCreator extends MigrationCreator
+class SeederMigrationCreator extends MigrationCreator
 {
     /**
      * Get the path to the stubs.
@@ -13,6 +13,6 @@ class SeedMigrationCreator extends MigrationCreator
      */
     public function getStubPath()
     {
-        return __DIR__ . '/stubs';
+        return __DIR__ . '/../../stubs';
     }
 }

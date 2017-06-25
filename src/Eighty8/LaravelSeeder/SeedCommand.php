@@ -15,7 +15,8 @@ class SeedCommand extends Command
      *
      * @var string
      */
-    protected $name = 'seed:run';
+    protected $name = 'seeder:run';
+
     /**
      * The console command description.
      *
@@ -53,7 +54,7 @@ class SeedCommand extends Command
             return;
         }
 
-        $path = database_path(config('seeds.dir'));
+        $path = database_path(config('seeders.dir'));
         $env = $this->option('env');
         $single = $this->option('file');
 
@@ -95,7 +96,7 @@ class SeedCommand extends Command
                 '--database' => $this->input->getOption('database'),
             ];
 
-            $this->call('seed:install', $options);
+            $this->call('seeder:install', $options);
         }
     }
 

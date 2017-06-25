@@ -4,28 +4,28 @@ namespace Eighty8\LaravelSeeder;
 
 use Config;
 use File;
-use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Console\Command;
+use Illuminate\Console\DetectsApplicationNamespace;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class SeedMakeCommand extends Command
 {
-    use AppNamespaceDetectorTrait;
+    use DetectsApplicationNamespace;
 
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'seed:make';
+    protected $name = 'seeder:make';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Makes a seed';
+    protected $description = 'Makes a seeder';
 
     /**
      * Execute the console command.
@@ -41,7 +41,7 @@ class SeedMakeCommand extends Command
 
         // Check path
         if (empty($path)) {
-            $path = database_path(config('seeds.dir'));
+            $path = database_path(config('seeders.dir'));
         } else {
             $path = base_path($path);
         }
@@ -69,7 +69,7 @@ class SeedMakeCommand extends Command
         File::put($path, $stub);
 
         // Output message
-        $message = "Seed created for $model";
+        $message = "Seeder created for $model";
 
         if (!empty($env)) {
             $message .= " in environment: $env";

@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
 {
+    const SEEDERS_CONFIG_PATH = '/../../config/seeders.php';
+    
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -22,7 +24,7 @@ class SeederServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/seeds.php' => config_path('seeds.php'),
+            __DIR__ . self::SEEDERS_CONFIG_PATH => config_path('seeders.php'),
         ]);
     }
 
@@ -34,52 +36,52 @@ class SeederServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/seeds.php', 'seeds'
+            __DIR__ . self::SEEDERS_CONFIG_PATH, 'seeds'
         );
 
-        $this->app->singleton('seed.repository', function ($app) {
-            return new SeederRepository($app['db'], config('seeds.table'));
+        $this->app->singleton('seeder.repository', function ($app) {
+            return new SeederRepository($app['db'], config('seeders.table'));
         });
 
-        $this->app->singleton('seed.migrator', function ($app) {
-            return new SeedMigrator($app['seed.repository'], $app['db'], $app['files']);
+        $this->app->singleton('seeder.migrator', function ($app) {
+            return new SeedMigrator($app['seeder.repository'], $app['db'], $app['files']);
         });
 
-        $this->app->bind('command.seed', function ($app) {
-            return new SeedOverrideCommand($app['seed.migrator']);
+        $this->app->bind('command.seeder', function ($app) {
+            return new SeedOverrideCommand($app['seeder.migrator']);
         });
 
-        $this->app->bind('seed.run', function ($app) {
-            return new SeedCommand($app['seed.migrator']);
+        $this->app->bind('seeder.run', function ($app) {
+            return new SeedCommand($app['seeder.migrator']);
         });
 
-        $this->app->bind('seed.install', function ($app) {
-            return new SeedInstallCommand($app['seed.repository']);
+        $this->app->bind('seeder.install', function ($app) {
+            return new SeedInstallCommand($app['seeder.repository']);
         });
 
-        $this->app->bind('seed.make', function () {
+        $this->app->bind('seeder.make', function () {
             return new SeedMakeCommand();
         });
 
-        $this->app->bind('seed.reset', function ($app) {
-            return new SeedResetCommand($app['seed.migrator']);
+        $this->app->bind('seeder.reset', function ($app) {
+            return new SeedResetCommand($app['seeder.migrator']);
         });
 
-        $this->app->bind('seed.rollback', function ($app) {
-            return new SeedRollbackCommand($app['seed.migrator']);
+        $this->app->bind('seeder.rollback', function ($app) {
+            return new SeedRollbackCommand($app['seeder.migrator']);
         });
 
-        $this->app->bind('seed.refresh', function () {
+        $this->app->bind('seeder.refresh', function () {
             return new SeedRefreshCommand();
         });
 
         $this->commands([
-            'seed.run',
-            'seed.install',
-            'seed.make',
-            'seed.reset',
-            'seed.rollback',
-            'seed.refresh',
+            'seeder.run',
+            'seeder.install',
+            'seeder.make',
+            'seeder.reset',
+            'seeder.rollback',
+            'seeder.refresh',
         ]);
     }
 
@@ -91,15 +93,15 @@ class SeederServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'seed.repository',
-            'seed.migrator',
-            'command.seed',
-            'seed.run',
-            'seed.install',
-            'seed.make',
-            'seed.reset',
-            'seed.rollback',
-            'seed.refresh',
+            'seeder.repository',
+            'seeder.migrator',
+            'command.seeder',
+            'seeder.run',
+            'seeder.install',
+            'seeder.make',
+            'seeder.reset',
+            'seeder.rollback',
+            'seeder.refresh',
         ];
     }
 }

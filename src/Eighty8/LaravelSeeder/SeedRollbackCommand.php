@@ -16,7 +16,7 @@ class SeedRollbackCommand extends Command
      *
      * @var string
      */
-    protected $name = 'seed:rollback';
+    protected $name = 'seeder:rollback';
     /**
      * The console command description.
      *
@@ -59,7 +59,7 @@ class SeedRollbackCommand extends Command
 
         $this->migrator->setConnection($this->input->getOption('database'));
 
-        if (File::exists(database_path(config('seeds.dir')))) {
+        if (File::exists(database_path(config('seeders.dir')))) {
             $this->migrator->setEnv($env);
         }
 

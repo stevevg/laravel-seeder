@@ -16,7 +16,7 @@ class SeedResetCommand extends Command
      *
      * @var string
      */
-    protected $name = 'seed:reset';
+    protected $name = 'seeder:reset';
     /**
      * The console command description.
      *
@@ -59,7 +59,7 @@ class SeedResetCommand extends Command
 
         $this->prepareDatabase();
 
-        if (File::exists(database_path(config('seeds.dir')))) {
+        if (File::exists(database_path(config('seeders.dir')))) {
             $this->migrator->setEnv($env);
         }
 

@@ -1,16 +1,16 @@
 <?php
 
-class Seeder extends Eloquent
+class Seeder extends \Illuminate\Database\Eloquent\Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'seeds';
+    protected $table = 'seeders';
 
     /**
-     * Fillable properties.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

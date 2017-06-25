@@ -31,13 +31,13 @@ Features
 
 Usage
 ============
-When you install SmartSeeder, various artisan commands are made available to you which use the same methodology you're used to using with Migrations.
+When you install LaravelSeeder, various artisan commands are made available to you which use the same methodology you're used to using with Migrations.
 
 <table>
-<tr><td>seed:run</td><td>Runs all the seeds in the smartSeeds directory that haven't been run yet.</td></tr>
-<tr><td>seed:make</td><td>Makes a new seed class in the environment you specify.</td></tr>
-<tr><td>seed:rollback</td><td>Rollback doesn't undo seeding (which would be impossible with an auto-incrementing primary key). It just allows you to re-run the last batch of seeds.</td></tr>
-<tr><td>seed:reset</td><td>Resets all the seeds.</td></tr>
-<tr><td>seed:refresh</td><td>Resets and re-runs all seeds.</td></tr>
-<tr><td>seed:install</td><td>You don't have to use this... it will be run automatically when you call "seed"</td></tr>
+<tr><td>seeder:run</td><td>Runs all the seeds in the smartSeeds directory that haven't been run yet.</td></tr>
+<tr><td>seeder:make</td><td>Makes a new seed class in the environment you specify.</td></tr>
+<tr><td>seeder:rollback</td><td>Rollback doesn't undo seeding (which would be impossible with an auto-incrementing primary key). It just allows you to re-run the last batch of seeds.</td></tr>
+<tr><td>seeder:reset</td><td>Resets all the seeds.</td></tr>
+<tr><td>seeder:refresh</td><td>Resets and re-runs all seeds.</td></tr>
+<tr><td>seeder:install</td><td>You don't have to use this... it will be run automatically when you call "seed"</td></tr>
 </table>

@@ -15,7 +15,7 @@ class SeedRefreshCommand extends Command
      *
      * @var string
      */
-    protected $name = 'seed:refresh';
+    protected $name = 'seeder:refresh';
 
     /**
      * The console command description.

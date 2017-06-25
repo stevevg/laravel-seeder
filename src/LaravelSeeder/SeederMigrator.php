@@ -135,11 +135,12 @@ class SeederMigrator extends Migrator
     /**
      * Run "down" a migration instance.
      *
-     * @param  object $seed
+     * @param  string $file
+     * @param  object $migration
      * @param  bool $pretend
      * @return void
      */
-    protected function runDown($seed, $pretend)
+    protected function runDown($seed, $migration, $pretend)
     {
         $file = $seed->seed;
 

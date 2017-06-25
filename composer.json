@@ -1,6 +1,6 @@
 {
   "name": "eighty8/laravel-seeder",
-  "description": "Environment-based Laravel Seeder with Versioning",
+  "description": "Versioned, environment-based Seeders in Laravel",
   "keywords": [
     "data",
     "database",
@@ -11,7 +11,8 @@
     "seeder",
     "seeding",
     "staging",
-    "table"
+    "table",
+    "version"
   ],
   "type": "library",
   "license": "MIT",

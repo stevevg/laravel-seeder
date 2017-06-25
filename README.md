@@ -34,7 +34,7 @@ Usage
 When you install LaravelSeeder, various artisan commands are made available to you which use the same methodology you're used to using with Migrations.
 
 <table>
-<tr><td>seeder:run</td><td>Runs all the seeds in the smartSeeds directory that haven't been run yet.</td></tr>
+<tr><td>seeder:run</td><td>Runs all the seeds in the "seeders" directory that haven't been run yet.</td></tr>
 <tr><td>seeder:make</td><td>Makes a new seed class in the environment you specify.</td></tr>
 <tr><td>seeder:rollback</td><td>Rollback doesn't undo seeding (which would be impossible with an auto-incrementing primary key). It just allows you to re-run the last batch of seeds.</td></tr>
 <tr><td>seeder:reset</td><td>Resets all the seeds.</td></tr>

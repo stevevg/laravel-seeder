@@ -28,7 +28,7 @@
   },
   "autoload": {
     "psr-0": {
-      "Eighty8\\SmartSeeder\\": "src/"
+      "Eighty8\\LaravelSeeder\\": "src/"
     }
   },
   "config": {

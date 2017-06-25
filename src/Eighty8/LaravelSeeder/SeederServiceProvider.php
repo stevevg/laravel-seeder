@@ -1,11 +1,11 @@
 <?php
 
-namespace Jlapp\SmartSeeder;
+namespace Eighty8\LaravelSeeder;
 
 use App;
 use Illuminate\Support\ServiceProvider;
 
-class SmartSeederServiceProvider extends ServiceProvider
+class SeederServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -22,7 +22,7 @@ class SmartSeederServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/seeds.php' => config_path('seeds.php'),
+            __DIR__ . '/../../config/seeds.php' => config_path('seeds.php'),
         ]);
     }
 
@@ -34,11 +34,11 @@ class SmartSeederServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../config/seeds.php', 'seeds'
+            __DIR__ . '/../../config/seeds.php', 'seeds'
         );
 
         $this->app->singleton('seed.repository', function ($app) {
-            return new SmartSeederRepository($app['db'], config('seeds.table'));
+            return new SeederRepository($app['db'], config('seeds.table'));
         });
 
         $this->app->singleton('seed.migrator', function ($app) {

@@ -1,6 +1,5 @@
 <?php
 
-
 class Seeder extends Eloquent
 {
     /**
@@ -13,7 +12,7 @@ class Seeder extends Eloquent
     /**
      * Fillable properties.
      *
-     * @var [type]
+     * @var array
      */
     protected $fillable = [
         'seed',

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jlapp\SmartSeeder;
+namespace Eighty8\LaravelSeeder;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,9 +31,9 @@ class SeedInstallCommand extends Command
     /**
      * Constructor.
      *
-     * @param SmartSeederRepository $repository
+     * @param SeederRepository $repository
      */
-    public function __construct(SmartSeederRepository $repository)
+    public function __construct(SeederRepository $repository)
     {
         parent::__construct();
 

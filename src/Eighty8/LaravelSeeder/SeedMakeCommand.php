@@ -1,6 +1,6 @@
 <?php
 
-namespace Jlapp\SmartSeeder;
+namespace Eighty8\LaravelSeeder;
 
 use Config;
 use File;
@@ -37,7 +37,7 @@ class SeedMakeCommand extends Command
         $model = ucfirst($this->argument('model'));
         $path = $this->option('path');
         $env = $this->option('env');
-        $stub = File::get(__DIR__.'/stubs/DatabaseSeeder.stub');
+        $stub = File::get(__DIR__ . '/stubs/DatabaseSeeder.stub');
 
         // Check path
         if (empty($path)) {
@@ -47,11 +47,11 @@ class SeedMakeCommand extends Command
         }
 
         // Check env
-        if (! empty($env)) {
+        if (!empty($env)) {
             $path .= "/$env";
         }
 
-        if (! File::exists($path)) {
+        if (!File::exists($path)) {
             File::makeDirectory($path, 0755, true);
         }
 
@@ -61,7 +61,7 @@ class SeedMakeCommand extends Command
 
         // Content
         $namespace = rtrim($this->getAppNamespace(), '\\');
-        $stub = str_replace('{{model}}', "seed_{$created}_".$model.'Seeder', $stub);
+        $stub = str_replace('{{model}}', "seed_{$created}_" . $model . 'Seeder', $stub);
         $stub = str_replace('{{namespace}}', " namespace $namespace;", $stub);
         $stub = str_replace('{{class}}', $model, $stub);
 
@@ -71,7 +71,7 @@ class SeedMakeCommand extends Command
         // Output message
         $message = "Seed created for $model";
 
-        if (! empty($env)) {
+        if (!empty($env)) {
             $message .= " in environment: $env";
         }
 
@@ -99,7 +99,13 @@ class SeedMakeCommand extends Command
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to seed to.', null],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The relative path to the base path to generate the seed to.', null],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The relative path to the base path to generate the seed to.',
+                null
+            ],
         ];
     }
 }

@@ -6,6 +6,8 @@ use Illuminate\Database\Migrations\MigrationCreator;
 
 class SeederMigrationCreator extends MigrationCreator
 {
+    const STUBS_PATH = __DIR__ . '/../../stubs';
+
     /**
      * Get the path to the stubs.
      *
@@ -13,6 +15,6 @@ class SeederMigrationCreator extends MigrationCreator
      */
     public function getStubPath()
     {
-        return __DIR__ . '/../../stubs';
+        return self::STUBS_PATH;
     }
 }

@@ -11,6 +11,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class SeederMake extends Command
 {
+    const DATABASE_SEEDER_STUB_PATH = __DIR__ . '/../../stubs/DatabaseSeeder.stub';
+
     use DetectsApplicationNamespace;
 
     /**
@@ -37,7 +39,7 @@ class SeederMake extends Command
         $model = ucfirst($this->argument('model'));
         $path = $this->option('path');
         $env = $this->option('env');
-        $stub = File::get(__DIR__ . '../../stubs/DatabaseSeeder.stub');
+        $stub = File::get(self::DATABASE_SEEDER_STUB_PATH);
 
         // Check path
         if (empty($path)) {

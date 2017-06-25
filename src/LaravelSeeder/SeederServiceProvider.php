@@ -14,7 +14,7 @@ use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
 {
-    const SEEDERS_CONFIG_PATH = '/../../config/seeders.php';
+    const CONFIG_PATH = __DIR__ . '/../../config/seeders.php';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -31,7 +31,7 @@ class SeederServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . self::SEEDERS_CONFIG_PATH => config_path('seeders.php'),
+            self::CONFIG_PATH => config_path('seeders.php'),
         ]);
     }
 
@@ -43,7 +43,7 @@ class SeederServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . self::SEEDERS_CONFIG_PATH, 'seeders'
+            self::CONFIG_PATH, 'seeders'
         );
 
         $this->app->singleton('seeder.repository', function ($app) {

@@ -2,16 +2,14 @@
 
 {{namespace}}
 
+use Eighty8\LaravelSeeder\Migrator\MigratableSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Eighty8\LaravelSeeder\Migrator\MigratableSeeder
 
 class {{model}} extends Seeder implements MigratableSeeder
 {
     /**
      * Run the database seeder.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -20,8 +18,6 @@ class {{model}} extends Seeder implements MigratableSeeder
 
     /**
      * Reverts the database seeder.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -29,5 +25,4 @@ class {{model}} extends Seeder implements MigratableSeeder
 
         {{class}}::truncate();
     }
-
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class SeederMake extends Command
 {
-    const DATABASE_SEEDER_STUB_PATH = __DIR__ . '/../../../stubs/DatabaseSeeder.stub';
+    const MIGRATABLE_SEEDER_STUB_PATH = __DIR__ . '/../../../stubs/MigratableSeeder.stub';
 
     use DetectsApplicationNamespace;
 
@@ -27,55 +27,23 @@ class SeederMake extends Command
      *
      * @var string
      */
-    protected $description = 'Makes a seeder';
+    protected $description = 'Generates a migratable Seeder class';
 
     /**
      * Execute the console command.
      */
     public function fire(): void
     {
-        $model = ucfirst($this->argument('model'));
-        $path = $this->option('path');
+        // Get parameters from user input
         $env = $this->option('env');
-        $stub = File::get(self::DATABASE_SEEDER_STUB_PATH);
+        $path = $this->option('path');
+        $model = ucfirst($this->argument('model'));
 
-        // Check path
-        if (empty($path)) {
-            $path = database_path(config('seeders.dir'));
-        } else {
-            $path = base_path($path);
-        }
-
-        // Check env
-        if (!empty($env)) {
-            $path .= "/$env";
-        }
-
-        if (!File::exists($path)) {
-            File::makeDirectory($path, 0755, true);
-        }
-
-        // File name
-        $created = date('Y_m_d_His');
-        $path .= "/{$created}_{$model}Seeder.php";
-
-        // Content
-        $namespace = rtrim($this->getAppNamespace(), '\\');
-        $stub = str_replace('{{model}}', "seed_{$created}_" . $model . 'Seeder', $stub);
-        $stub = str_replace('{{namespace}}', " namespace $namespace;", $stub);
-        $stub = str_replace('{{class}}', $model, $stub);
-
-        // Create file
-        File::put($path, $stub);
+        // Generates the Seeder class
+        $this->generateSeeder($model, $this->getOutputPath($path, $env));
 
         // Output message
-        $message = "Seeder created for $model";
-
-        if (!empty($env)) {
-            $message .= " in environment: $env";
-        }
-
-        $this->line($message);
+        $this->printMessage($model, $env);
     }
 
     /**
@@ -107,5 +75,75 @@ class SeederMake extends Command
                 null
             ],
         ];
+    }
+
+    /**
+     * Gets the output path for the file to be generated
+     *
+     * @param string|null $path
+     * @param string|null $env
+     *
+     * @return string
+     */
+    private function getOutputPath(?string $path, ?string $env): string
+    {
+        // Resolve the path from configuration or parameter
+        $path = (empty($path))
+            ? database_path(config('seeders.dir'))
+            : base_path($path);
+
+        // Check if an environment was passed in
+        if (!empty($env)) {
+            $path .= "/$env";
+        }
+
+        // Ensure the directory exists
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+
+        return $path;
+    }
+
+    /**
+     * Generates the Seeder class.
+     *
+     * @param string $model
+     * @param string $outputPath
+     */
+    private function generateSeeder(string $model, string $outputPath): void
+    {
+        // Generate filename
+        $created = date('Y_m_d_His');
+        $fileName = $outputPath . "/{$created}_{$model}Seeder.php";
+
+        // Get the MigratableSeeder stub
+        $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
+
+        // Fill in the template
+        $namespace = rtrim($this->getAppNamespace(), '\\');
+        $stub = str_replace('{{model}}', "{$created}_" . $model . 'Seeder', $stub);
+        $stub = str_replace('{{namespace}}', "namespace $namespace;", $stub);
+        $stub = str_replace('{{class}}', $model, $stub);
+
+        // Create file
+        File::put($fileName, $stub);
+    }
+
+    /**
+     * Prints the message.
+     *
+     * @param string $model
+     * @param string $env
+     */
+    private function printMessage(string $model, string $env): void
+    {
+        $message = 'Seeder created for ' . $model;
+
+        if (!empty($env)) {
+            $message .= ' in environment: ' . $env;
+        }
+
+        $this->line($message);
     }
 }

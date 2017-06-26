@@ -53,12 +53,9 @@ class SeederRun extends Command
             return;
         }
 
-        $path = database_path(config('seeders.dir'));
+        // Get options from user input
         $env = $this->option('env');
         $single = $this->option('file');
-
-        $this->prepareDatabase();
-        $this->migrator->setEnvironment($env);
 
         // The pretend option can be used for "simulating" the migration and grabbing
         // the SQL queries that would fire if the migration were to be run against
@@ -66,6 +63,12 @@ class SeederRun extends Command
         $options = [
             'pretend' => $this->input->getOption('pretend'),
         ];
+
+        // Prepare the migrator
+        $this->prepareMigrator($env);
+
+        // Get the path for the migrations
+        $path = database_path(config('seeders.dir'));
 
         if ($single) {
             $this->migrator->runSingleFile("$path/$single", $options);
@@ -84,18 +87,27 @@ class SeederRun extends Command
     /**
      * Prepare the migration database for running.
      *
+     * @param string|null $env
+     *
      * @return void
      */
-    protected function prepareDatabase(): void
+    protected function prepareMigrator(?string $env): void
     {
+        // Set the connection for the migrator
         $this->migrator->setConnection($this->input->getOption('database'));
 
+        // Create the seeder migration table if it doesn't already exist
         if (!$this->migrator->repositoryExists()) {
             $options = [
                 '--database' => $this->input->getOption('database'),
             ];
 
             $this->call('seeder:install', $options);
+        }
+
+        // Set the environment if there is one
+        if ($env) {
+            $this->migrator->setEnvironment($env);
         }
     }
 

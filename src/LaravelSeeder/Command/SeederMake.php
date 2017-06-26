@@ -40,41 +40,40 @@ class SeederMake extends Command
         $model = ucfirst($this->argument('model'));
 
         // Generates the Seeder class
-        $this->generateSeeder($model, $this->getOutputPath($path, $env));
+        $filename = $this->generateSeeder($model, $this->getOutputPath($path, $env));
 
         // Output message
-        $this->printMessage($model, $env);
+        $this->printMessage($model, $filename, $env);
     }
 
     /**
-     * Get the console command arguments.
+     * Generates the Seeder class.
      *
-     * @return array
+     * @param string $model
+     * @param string $outputPath
+     *
+     * @return string
      */
-    protected function getArguments(): array
+    private function generateSeeder(string $model, string $outputPath): string
     {
-        return [
-            ['model', InputArgument::REQUIRED, 'The name of the model you wish to seed.'],
-        ];
-    }
+        // Generate filename
+        $createdTimestamp = date('Y_m_d_His');
+        $fileName = $outputPath . "/{$createdTimestamp}_{$model}" . 'Seeder.php';
 
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions(): array
-    {
-        return [
-            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to seed to.', null],
-            [
-                'path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'The relative path to the base path to generate the seed to.',
-                null
-            ],
-        ];
+        // Get the MigratableSeeder stub
+        $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
+
+        // Fill in the template
+        $namespace = rtrim($this->getAppNamespace(), '\\');
+        $stub = str_replace('{{model}}', "{$createdTimestamp}_" . $model . 'Seeder', $stub);
+        $stub = str_replace('{{namespace}}', 'namespace ' . $namespace . ';', $stub);
+        $stub = str_replace('{{class}}', $model, $stub);
+
+        // Create file
+        File::put($fileName, $stub);
+
+        // Return the filename
+        return $fileName;
     }
 
     /**
@@ -106,44 +105,52 @@ class SeederMake extends Command
     }
 
     /**
-     * Generates the Seeder class.
-     *
-     * @param string $model
-     * @param string $outputPath
-     */
-    private function generateSeeder(string $model, string $outputPath): void
-    {
-        // Generate filename
-        $created = date('Y_m_d_His');
-        $fileName = $outputPath . "/{$created}_{$model}Seeder.php";
-
-        // Get the MigratableSeeder stub
-        $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
-
-        // Fill in the template
-        $namespace = rtrim($this->getAppNamespace(), '\\');
-        $stub = str_replace('{{model}}', "{$created}_" . $model . 'Seeder', $stub);
-        $stub = str_replace('{{namespace}}', "namespace $namespace;", $stub);
-        $stub = str_replace('{{class}}', $model, $stub);
-
-        // Create file
-        File::put($fileName, $stub);
-    }
-
-    /**
      * Prints the message.
      *
      * @param string $model
      * @param string|null $env
      */
-    private function printMessage(string $model, ?string $env): void
+    private function printMessage(string $model, string $filename, ?string $env): void
     {
         $message = 'Seeder created for ' . $model;
 
         if (!empty($env)) {
-            $message .= ' in environment: ' . $env;
+            $message .= ' for ' . $env . ' environment';
         }
 
+        $message .= ': ' . $filename;
+
         $this->line($message);
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        return [
+            ['model', InputArgument::REQUIRED, 'The name of the model you wish to seed.'],
+        ];
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions(): array
+    {
+        return [
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to seed to.', null],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The relative path to the base path to generate the seed to.',
+                null
+            ],
+        ];
     }
 }

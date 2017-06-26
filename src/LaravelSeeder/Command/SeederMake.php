@@ -1,6 +1,6 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
 use Config;
 use File;
@@ -31,10 +31,8 @@ class SeederMake extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         $model = ucfirst($this->argument('model'));
         $path = $this->option('path');
@@ -85,7 +83,7 @@ class SeederMake extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['model', InputArgument::REQUIRED, 'The name of the model you wish to seed.'],
@@ -97,7 +95,7 @@ class SeederMake extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to seed to.', null],

@@ -1,8 +1,8 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\SeederMigrator;
+use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
 use Symfony\Component\Console\Input\InputOption;
 
 class DbSeedOverride extends SeederRun
@@ -17,7 +17,7 @@ class DbSeedOverride extends SeederRun
     /**
      * Constructor.
      *
-     * @param SeederMigrator $migrator [description]
+     * @param SeederMigrator $migrator
      */
     public function __construct(SeederMigrator $migrator)
     {
@@ -29,14 +29,15 @@ class DbSeedOverride extends SeederRun
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         $options = parent::getOptions();
+
         $options[] = [
             'class',
             null,
             InputOption::VALUE_OPTIONAL,
-            "There is no rootseeder in the LaravelSeeder package, but we need this to override Laravel's behavior.",
+            "This override Laravel's behavior.",
             null
         ];
 

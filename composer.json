@@ -23,17 +23,10 @@
     "illuminate/database": "5.4.*",
     "illuminate/filesystem": "5.4.*"
   },
-  "require-dev": {
-    "phpspec/phpspec": "~2.0",
-    "henrikbjorn/phpspec-code-coverage": "~0.2"
-  },
   "autoload": {
     "psr-4": {
       "Eighty8\\LaravelSeeder\\": "src/LaravelSeeder"
     }
-  },
-  "config": {
-    "bin-dir": "bin"
   },
   "prefer-stable": true
 }

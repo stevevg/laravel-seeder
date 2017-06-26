@@ -4,25 +4,26 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Eighty8\LaravelSeeder\Migrator\MigratableSeeder
 
-class {{model}} extends Seeder
+class {{model}} extends Seeder implements MigratableSeeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeder.
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Model::unguard();
     }
 
     /**
-     * Run the database seeds.
+     * Reverts the database seeder.
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Model::unguard();
 

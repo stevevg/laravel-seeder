@@ -1,7 +1,8 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
+use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -26,16 +27,26 @@ class SeederReset extends Command
     protected $description = 'Resets all the seeders in the database';
 
     /**
-     * Migrator.
+     * SeederMigrator.
      *
-     * @var object
+     * @var SeederMigrator
      */
     private $migrator;
 
     /**
-     * Execute the console command.
+     * Constructor.
      *
-     * @return mixed
+     * @param SeederMigrator $migrator
+     */
+    public function __construct(SeederMigrator $migrator)
+    {
+        parent::__construct();
+
+        $this->migrator = $migrator;
+    }
+
+    /**
+     * Execute the console command.
      */
     public function fire()
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\SeederMigrator;
+use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,9 +26,9 @@ class SeederRun extends Command
     protected $description = 'Seeds the database';
 
     /**
-     * Migrator.
+     * SeederMigrator.
      *
-     * @var object
+     * @var SeederMigrator
      */
     private $migrator;
 
@@ -46,10 +46,8 @@ class SeederRun extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         if (!$this->confirmToProceed()) {
             return;
@@ -60,7 +58,7 @@ class SeederRun extends Command
         $single = $this->option('file');
 
         $this->prepareDatabase();
-        $this->migrator->setEnv($env);
+        $this->migrator->setEnvironment($env);
 
         // The pretend option can be used for "simulating" the migration and grabbing
         // the SQL queries that would fire if the migration were to be run against
@@ -88,7 +86,7 @@ class SeederRun extends Command
      *
      * @return void
      */
-    protected function prepareDatabase()
+    protected function prepareDatabase(): void
     {
         $this->migrator->setConnection($this->input->getOption('database'));
 
@@ -106,7 +104,7 @@ class SeederRun extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment in which to run the seeds.', null],

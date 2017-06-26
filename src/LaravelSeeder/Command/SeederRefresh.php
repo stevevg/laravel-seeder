@@ -1,6 +1,6 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -26,10 +26,8 @@ class SeederRefresh extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         if (!$this->confirmToProceed()) {
             return;
@@ -60,7 +58,7 @@ class SeederRefresh extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use.'],

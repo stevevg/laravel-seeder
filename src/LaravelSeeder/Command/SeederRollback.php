@@ -1,8 +1,8 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\SeederMigrator;
+use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -18,6 +18,7 @@ class SeederRollback extends Command
      * @var string
      */
     protected $name = 'seeder:rollback';
+
     /**
      * The console command description.
      *
@@ -26,9 +27,9 @@ class SeederRollback extends Command
     protected $description = 'Rollback all database seeding';
 
     /**
-     * SeedMigrator.
+     * SeederMigrator.
      *
-     * @var [type]
+     * @var SeederMigrator
      */
     private $migrator;
 
@@ -46,10 +47,8 @@ class SeederRollback extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         if (!$this->confirmToProceed()) {
             return;
@@ -61,7 +60,7 @@ class SeederRollback extends Command
         $this->migrator->setConnection($this->input->getOption('database'));
 
         if (File::exists(database_path(config('seeders.dir')))) {
-            $this->migrator->setEnv($env);
+            $this->migrator->setEnvironment($env);
         }
 
         $this->migrator->rollback($pretend);
@@ -79,7 +78,7 @@ class SeederRollback extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment in which to run the seeds.', null],

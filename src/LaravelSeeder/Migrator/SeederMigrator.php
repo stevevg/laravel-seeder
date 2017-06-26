@@ -1,12 +1,13 @@
 <?php
 
-namespace Eighty8\LaravelSeeder;
+namespace Eighty8\LaravelSeeder\Migrator;
 
 use App;
 use Config;
+use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
 use File;
 use Illuminate\Console\DetectsApplicationNamespace;
-use Illuminate\Database\ConnectionResolverInterface as Resolver;
+use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 
@@ -15,40 +16,85 @@ class SeederMigrator extends Migrator
     use DetectsApplicationNamespace;
 
     /**
+     * The migration repository implementation.
+     *
+     * @var SeederRepositoryInterface
+     */
+    protected $repository;
+
+    /**
+     * The filesystem instance.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $files;
+
+    /**
+     * The connection resolver instance.
+     *
+     * @var ConnectionResolverInterface
+     */
+    protected $resolver;
+
+    /**
+     * The name of the default connection.
+     *
+     * @var string
+     */
+    protected $connection;
+
+    /**
+     * The notes for the current operation.
+     *
+     * @var array
+     */
+    protected $notes = [];
+
+    /**
+     * The paths to all of the migration files.
+     *
+     * @var array
+     */
+    protected $paths = [];
+
+    /**
      * Create a new migrator instance.
      *
-     * @param  \Illuminate\Database\Migrations\MigrationRepositoryInterface $repository
-     * @param  \Illuminate\Database\ConnectionResolverInterface $resolver
-     * @param  \Illuminate\Filesystem\Filesystem $files
-     * @return void
+     * @param SeederRepositoryInterface $repository
+     * @param ConnectionResolverInterface $resolver
+     * @param Filesystem $files
      */
-    public function __construct(SeederRepository $repository, Resolver $resolver, Filesystem $files)
-    {
+    public function __construct(
+        SeederRepositoryInterface $repository,
+        ConnectionResolverInterface $resolver,
+        Filesystem $files
+    ) {
         parent::__construct($repository, $resolver, $files);
     }
 
     /**
-     * Set env.
+     * Sets environment.
      *
      * @param string $env
      */
-    public function setEnv($env)
+    public function setEnvironment(string $env): void
     {
-        $this->repository->setEnv($env);
+        $this->repository->setEnvironment($env);
     }
 
     /**
      * Get all of the migration files in a given path.
      *
      * @param  string $path
+     *
      * @return array
      */
-    public function getMigrationFiles($path)
+    public function getMigrationFiles($path): array
     {
         $files = [];
 
-        if (!empty($this->repository->env)) {
-            $files = array_merge($files, $this->files->glob("$path/{$this->repository->env}/*.php"));
+        if (!$this->repository->hasEnvironment()) {
+            $files = array_merge($files, $this->files->glob("$path/{$this->repository->getEnvironment()}/*.php"));
         }
 
         $files = array_merge($files, $this->files->glob($path . '/*.php'));
@@ -77,9 +123,8 @@ class SeederMigrator extends Migrator
      *
      * @param  string $path
      * @param  bool $pretend
-     * @return void
      */
-    public function runSingleFile($path, $pretend = false)
+    public function runSingleFile($path, $pretend = false): void
     {
         $this->notes = [];
         $file = str_replace('.php', '', basename($path));
@@ -99,7 +144,7 @@ class SeederMigrator extends Migrator
 
         $this->files->requireOnce($path);
 
-        $this->runMigrationList($migrations, $pretend);
+        $this->runPending($migrations, $pretend);
     }
 
     /**
@@ -108,28 +153,52 @@ class SeederMigrator extends Migrator
      * @param  string $file
      * @param  int $batch
      * @param  bool $pretend
-     * @return void
      */
-    protected function runUp($file, $batch, $pretend)
+    protected function runUp($file, $batch, $pretend): void
     {
-        // First we will resolve a "real" instance of the migration class from this
-        // migration file name. Once we have the instances we can run the actual
+        // First we will resolve a "real" instance of the seeder class from this
+        // seeder file name. Once we have the instances we can run the actual
         // command such as "up" or "down", or we can just simulate the action.
-        $fullPath = $this->getAppNamespace() . $file;
-        $migration = new $fullPath();
+        $seeder = $this->resolve($file);
 
         if ($pretend) {
-            return $this->pretendToRun($migration, 'run');
+            $this->pretendToRun($seeder, 'run');
+
+            return;
         }
 
-        $migration->run();
+        $seeder->run();
 
         // Once we have run a migrations class, we will log that it was run in this
-        // repository so that we don't try to run it next time we do a migration
-        // in the application. A migration repository keeps the migrate order.
+        // repository so that we don't try to run it next time we do a seeder
+        // in the application. A seeder repository keeps the migrate order.
         $this->repository->log($file, $batch);
 
         $this->note("<info>Seeded:</info> $file");
+    }
+
+    /**
+     * Resolve a migration instance from a file.
+     *
+     * @param  string $file
+     *
+     * @return MigratableSeeder
+     */
+    public function resolve($file): MigratableSeeder
+    {
+        $filePath = database_path(config('seeders.dir') . '/' . $file . '.php');
+
+        if (File::exists($filePath)) {
+            require_once $filePath;
+        } elseif (!empty($this->repository->env)) {
+            require_once database_path(config('seeders.dir') . '/' . $this->repository->getEnvironment() . '/' . $file . '.php');
+        } else {
+            require_once database_path(config('seeders.dir') . '/' . App::environment() . '/' . $file . '.php');
+        }
+
+        $fullPath = $this->getAppNamespace() . $file;
+
+        return new $fullPath();
     }
 
     /**
@@ -138,23 +207,24 @@ class SeederMigrator extends Migrator
      * @param  string $file
      * @param  object $migration
      * @param  bool $pretend
-     * @return void
      */
-    protected function runDown($seed, $migration, $pretend)
+    protected function runDown($seed, $migration, $pretend): void
     {
         $file = $seed->seed;
 
         // First we will get the file name of the migration so we can resolve out an
-        // instance of the migration. Once we get an instance we can either run a
+        // seeder of the migration. Once we get an seeder we can either run a
         // pretend execution of the migration or we can run the real migration.
-        $instance = $this->resolve($file);
+        $seeder = $this->resolve($file);
 
         if ($pretend) {
-            return $this->pretendToRun($instance, 'down');
+            $this->pretendToRun($seeder, 'down');
+
+            return;
         }
 
-        if (method_exists($instance, 'down')) {
-            $instance->down();
+        if (method_exists($seeder, 'down')) {
+            $seeder->down();
         }
 
         // Once we have successfully run the migration "down" we will remove it from
@@ -163,28 +233,5 @@ class SeederMigrator extends Migrator
         $this->repository->delete($seed);
 
         $this->note("<info>Rolled back:</info> $file");
-    }
-
-    /**
-     * Resolve a migration instance from a file.
-     *
-     * @param  string $file
-     * @return object
-     */
-    public function resolve($file)
-    {
-        $filePath = database_path(config('seeders.dir') . '/' . $file . '.php');
-
-        if (File::exists($filePath)) {
-            require_once $filePath;
-        } elseif (!empty($this->repository->env)) {
-            require_once database_path(config('seeders.dir') . '/' . $this->repository->env . '/' . $file . '.php');
-        } else {
-            require_once database_path(config('seeders.dir') . '/' . App::environment() . '/' . $file . '.php');
-        }
-
-        $fullPath = $this->getAppNamespace() . $file;
-
-        return new $fullPath();
     }
 }

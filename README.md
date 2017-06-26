@@ -4,6 +4,12 @@ Seeding as it is currently done in Laravel is intended only for dev builds, but 
 
 What if you want to seed a production database with different data from what you use in development? What if you want to seed a table you've added to a database that is currently in production with new data?
 
+Requirements
+============
+
+- Laravel >= 5.4
+- PHP >= 7.1
+
 Installation
 ============
 

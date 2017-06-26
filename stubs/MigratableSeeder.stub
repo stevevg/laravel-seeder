@@ -4,7 +4,7 @@ use Eighty8\LaravelSeeder\Migrator\MigratableSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class {{model}} extends Seeder implements MigratableSeeder
+class {{class}} extends Seeder implements MigratableSeeder
 {
     /**
      * Run the database seeder.
@@ -21,6 +21,6 @@ class {{model}} extends Seeder implements MigratableSeeder
     {
         Model::unguard();
 
-        {{class}}::truncate();
+        {{model}}::truncate();
     }
 }

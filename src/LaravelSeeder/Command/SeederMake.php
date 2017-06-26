@@ -37,7 +37,7 @@ class SeederMake extends Command
         $model = ucfirst($this->argument('model'));
 
         // Generates the Seeder class
-        $filename = $this->generateSeeder($model, $this->getOutputPath($path, $env));
+        $filename = $this->generateSeeder($model, $path, $env);
 
         // Output message
         $this->printMessage($model, $filename, $env);
@@ -51,20 +51,25 @@ class SeederMake extends Command
      *
      * @return string
      */
-    private function generateSeeder(string $model, string $outputPath): string
+    private function generateSeeder(string $model, ?string $path, ?string $env): string
     {
         // Generate filename
         $createdTimestamp = date('Y_m_d_His');
-        $fileName = $outputPath . "/{$createdTimestamp}_{$model}" . 'Seeder.php';
+        $fileName = $this->getOutputPath($path, $env) . "/{$createdTimestamp}_{$model}" . 'Seeder.php';
 
-        // Get the MigratableSeeder stub
+        // Generate class name
+        $className = '';
+        if ($env) {
+            $className .= ucwords($env);
+        }
+        $className .= $model . 'Seeder';
+
+        // Generate the Seeder class from the stub file
         $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
+        $stub = str_replace('{{class}}', $className, $stub);
+        $stub = str_replace('{{model}}', $model, $stub);
 
-        // Fill in the template
-        $stub = str_replace('{{model}}', $model . 'Seeder', $stub);
-        $stub = str_replace('{{class}}', $model, $stub);
-
-        // Create file
+        // Create Seeder class
         File::put($fileName, $stub);
 
         // Return the filename

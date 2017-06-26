@@ -134,9 +134,9 @@ class SeederMake extends Command
      * Prints the message.
      *
      * @param string $model
-     * @param string $env
+     * @param string|null $env
      */
-    private function printMessage(string $model, string $env): void
+    private function printMessage(string $model, ?string $env): void
     {
         $message = 'Seeder created for ' . $model;
 

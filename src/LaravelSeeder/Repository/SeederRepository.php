@@ -122,7 +122,7 @@ class SeederRepository implements SeederRepositoryInterface
      */
     public function getEnvironment(): string
     {
-        return $this->environment;
+        return $this->resolveEnvironment();
     }
 
     /**

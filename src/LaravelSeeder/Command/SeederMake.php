@@ -5,15 +5,12 @@ namespace Eighty8\LaravelSeeder\Command;
 use Config;
 use File;
 use Illuminate\Console\Command;
-use Illuminate\Console\DetectsApplicationNamespace;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class SeederMake extends Command
 {
     const MIGRATABLE_SEEDER_STUB_PATH = __DIR__ . '/../../../stubs/MigratableSeeder.stub';
-
-    use DetectsApplicationNamespace;
 
     /**
      * The console command name.
@@ -64,9 +61,7 @@ class SeederMake extends Command
         $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
 
         // Fill in the template
-        $namespace = rtrim($this->getAppNamespace(), '\\');
         $stub = str_replace('{{model}}', $model . 'Seeder', $stub);
-        $stub = str_replace('{{namespace}}', 'namespace ' . $namespace . ';', $stub);
         $stub = str_replace('{{class}}', $model, $stub);
 
         // Create file

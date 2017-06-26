@@ -6,15 +6,13 @@ use App;
 use Config;
 use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
 use File;
-use Illuminate\Console\DetectsApplicationNamespace;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 class SeederMigrator extends Migrator
 {
-    use DetectsApplicationNamespace;
-
     /**
      * The migration repository implementation.
      *
@@ -190,15 +188,13 @@ class SeederMigrator extends Migrator
 
         if (File::exists($filePath)) {
             require_once $filePath;
-        } elseif (!empty($this->repository->env)) {
-            require_once database_path(config('seeders.dir') . '/' . $this->repository->getEnvironment() . '/' . $file . '.php');
         } else {
-            require_once database_path(config('seeders.dir') . '/' . App::environment() . '/' . $file . '.php');
+            require_once database_path(config('seeders.dir') . '/' . $this->repository->getEnvironment() . '/' . $file . '.php');
         }
 
-        $fullPath = $this->getAppNamespace() . $file;
+        $class = Str::studly(implode('_', array_slice(explode('_', $file), 4)));
 
-        return new $fullPath();
+        return new $class();
     }
 
     /**

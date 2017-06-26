@@ -1,7 +1,5 @@
 <?php
 
-{{namespace}}
-
 use Eighty8\LaravelSeeder\Migrator\MigratableSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

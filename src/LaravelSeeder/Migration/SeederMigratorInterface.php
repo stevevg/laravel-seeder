@@ -2,6 +2,8 @@
 
 namespace Eighty8\LaravelSeeder\Migration;
 
+use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
+
 interface SeederMigratorInterface
 {
     /**
@@ -92,4 +94,27 @@ interface SeederMigratorInterface
      * @return bool
      */
     public function repositoryExists();
+
+    /**
+     * Get the seeder repository instance.
+     *
+     * @return SeederRepositoryInterface
+     */
+    public function getRepository();
+
+    /**
+     * Get the name of the migration.
+     *
+     * @param  string $path
+     * @return string
+     */
+    public function getMigrationName($path);
+
+    /**
+     * Get all of the migration files in a given path.
+     *
+     * @param  string|array $paths
+     * @return array
+     */
+    public function getMigrationFiles($paths);
 }

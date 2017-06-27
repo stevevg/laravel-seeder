@@ -6,7 +6,7 @@ use App;
 use Eighty8\LaravelSeeder\Migration\SeederMigratorInterface;
 use Illuminate\Console\Command;
 
-abstract class AbstractSeederMigratorCommand extends Command
+abstract class AbstractSeedMigratorCommand extends Command
 {
     /** @var string */
     protected $environment;

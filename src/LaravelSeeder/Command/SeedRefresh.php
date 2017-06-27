@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederRefresh extends Command
+class SeedRefresh extends Command
 {
     use ConfirmableTrait;
 
@@ -15,7 +15,7 @@ class SeederRefresh extends Command
      *
      * @var string
      */
-    protected $name = 'seeder:refresh';
+    protected $name = 'seed:refresh';
 
     /**
      * The console command description.
@@ -61,7 +61,7 @@ class SeederRefresh extends Command
     protected function getOptions(): array
     {
         return [
-            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use.'],
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use for the seeders.'],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
         ];

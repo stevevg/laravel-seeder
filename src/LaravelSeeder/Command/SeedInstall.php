@@ -7,21 +7,21 @@ use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederInstall extends Command
+class SeedInstall extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'seeder:install';
+    protected $name = 'seed:install';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create the Seeder repository';
+    protected $description = 'Create the seeder repository';
 
     /**
      * The repository instance.
@@ -51,7 +51,7 @@ class SeederInstall extends Command
 
         $this->repository->createRepository();
 
-        $this->info('Seeders table created successfully.');
+        $this->info('Seeder table created successfully.');
     }
 
     /**

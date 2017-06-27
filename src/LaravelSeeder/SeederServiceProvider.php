@@ -2,15 +2,13 @@
 
 namespace Eighty8\LaravelSeeder;
 
-use App;
-use Eighty8\LaravelSeeder\Command\OverrideDbSeed;
-use Eighty8\LaravelSeeder\Command\OverrideMakeSeeder;
-use Eighty8\LaravelSeeder\Command\SeederInstall;
-use Eighty8\LaravelSeeder\Command\SeederMake;
-use Eighty8\LaravelSeeder\Command\SeederRefresh;
-use Eighty8\LaravelSeeder\Command\SeederReset;
-use Eighty8\LaravelSeeder\Command\SeederRollback;
-use Eighty8\LaravelSeeder\Command\SeederRun;
+use Eighty8\LaravelSeeder\Command\SeedInstall;
+use Eighty8\LaravelSeeder\Command\SeedMake;
+use Eighty8\LaravelSeeder\Command\SeedRefresh;
+use Eighty8\LaravelSeeder\Command\SeedReset;
+use Eighty8\LaravelSeeder\Command\SeedRollback;
+use Eighty8\LaravelSeeder\Command\SeedRun;
+use Eighty8\LaravelSeeder\Command\SeedStatus;
 use Eighty8\LaravelSeeder\Migration\SeederMigrationCreator;
 use Eighty8\LaravelSeeder\Migration\SeederMigrator;
 use Eighty8\LaravelSeeder\Migration\SeederMigratorInterface;
@@ -89,37 +87,42 @@ class SeederServiceProvider extends ServiceProvider
      */
     private function registerCommands(): void
     {
-        $this->app->bind(SeederInstall::class, function ($app) {
-            return new SeederInstall($app[SeederRepositoryInterface::class]);
+        $this->app->bind(SeedInstall::class, function ($app) {
+            return new SeedInstall($app[SeederRepositoryInterface::class]);
         });
 
-        $this->app->bind(SeederMake::class, function ($app) {
-            return new SeederMake($app[SeederMigrationCreator::class], $app[Composer::class]);
+        $this->app->bind(SeedMake::class, function ($app) {
+            return new SeedMake($app[SeederMigrationCreator::class], $app[Composer::class]);
         });
 
-        $this->app->bind(SeederRefresh::class, function () {
-            return new SeederRefresh();
+        $this->app->bind(SeedRefresh::class, function () {
+            return new SeedRefresh();
         });
 
-        $this->app->bind(SeederReset::class, function ($app) {
-            return new SeederReset($app[SeederMigrator::class]);
+        $this->app->bind(SeedReset::class, function ($app) {
+            return new SeedReset($app[SeederMigrator::class]);
         });
 
-        $this->app->bind(SeederRollback::class, function ($app) {
-            return new SeederRollback($app[SeederMigrator::class]);
+        $this->app->bind(SeedRollback::class, function ($app) {
+            return new SeedRollback($app[SeederMigrator::class]);
         });
 
-        $this->app->bind(SeederRun::class, function ($app) {
-            return new SeederRun($app[SeederMigrator::class]);
+        $this->app->bind(SeedRun::class, function ($app) {
+            return new SeedRun($app[SeederMigrator::class]);
+        });
+
+        $this->app->bind(SeedStatus::class, function ($app) {
+            return new SeedStatus($app[SeederMigrator::class]);
         });
 
         $this->commands([
-            SeederInstall::class,
-            SeederMake::class,
-            SeederRefresh::class,
-            SeederReset::class,
-            SeederRollback::class,
-            SeederRun::class,
+            SeedInstall::class,
+            SeedMake::class,
+            SeedRefresh::class,
+            SeedReset::class,
+            SeedRollback::class,
+            SeedRun::class,
+            SeedStatus::class,
         ]);
     }
 
@@ -136,12 +139,13 @@ class SeederServiceProvider extends ServiceProvider
             SeederMigrator::class,
             SeederMigratorInterface::class,
             SeederMigrationCreator::class,
-            SeederInstall::class,
-            SeederMake::class,
-            SeederRefresh::class,
-            SeederReset::class,
-            SeederRollback::class,
-            SeederRun::class,
+            SeedInstall::class,
+            SeedMake::class,
+            SeedRefresh::class,
+            SeedReset::class,
+            SeedRollback::class,
+            SeedRun::class,
+            SeedStatus::class,
         ];
     }
 }

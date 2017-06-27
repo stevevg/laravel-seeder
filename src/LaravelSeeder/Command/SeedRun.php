@@ -5,7 +5,7 @@ namespace Eighty8\LaravelSeeder\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederRun extends AbstractSeederMigratorCommand
+class SeedRun extends AbstractSeedMigratorCommand
 {
     use ConfirmableTrait;
 
@@ -14,14 +14,14 @@ class SeederRun extends AbstractSeederMigratorCommand
      *
      * @var string
      */
-    protected $name = 'seeder:run';
+    protected $name = 'seed';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seeds the database';
+    protected $description = 'Run the database seeders';
 
     /**
      * Execute the console command.
@@ -57,7 +57,7 @@ class SeederRun extends AbstractSeederMigratorCommand
     protected function getOptions(): array
     {
         return [
-            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment in which to run the seeds.', null],
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use for the seeders.'],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
             ['pretend', null, InputOption::VALUE_NONE, 'Dump the SQL queries that would be run.'],

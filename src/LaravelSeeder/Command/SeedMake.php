@@ -7,21 +7,21 @@ use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederMake extends MigrateMakeCommand
+class SeedMake extends MigrateMakeCommand
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'seeder:make';
+    protected $name = 'seed:make';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generates a migratable Seeder class';
+    protected $description = 'Create a new migratable seeder class';
 
     /**
      * The console command signature.
@@ -29,8 +29,8 @@ class SeederMake extends MigrateMakeCommand
      * @var string
      */
     protected $signature = 'seeder:make {name : The name of the seeder.}
-        {--env= : The environment to create the seeder for.}
-        {--path= : The relative path from the base path to generate the seed to.}';
+        {--env= : The environment the seeder should be created for.}
+        {--path= : The location where the seeder file should be created.}';
 
     /**
      * Execute the console command.
@@ -118,20 +118,8 @@ class SeederMake extends MigrateMakeCommand
     protected function getOptions(): array
     {
         return [
-            [
-                'env',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'The environment to create the seeder for.',
-                null
-            ],
-            [
-                'path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'The relative path to the base path to generate the seed to.',
-                null
-            ],
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use for the seeders.'],
+            ['path', null, InputOption::VALUE_OPTIONAL, 'The location where the seeder file should be created.'],
         ];
     }
 }

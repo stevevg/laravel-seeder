@@ -33,7 +33,7 @@ interface SeederMigratorInterface
      *
      * @return array
      */
-    public function run($paths = [], array $options = []): array;
+    public function run($paths = [], array $options = []);
 
     /**
      * Run an array of migrations.
@@ -41,7 +41,7 @@ interface SeederMigratorInterface
      * @param  array $migrations
      * @param  array $options
      */
-    public function runPending(array $migrations, array $options = []): void;
+    public function runPending(array $migrations, array $options = []);
 
     /**
      * Rolls all of the currently applied migrations back.
@@ -51,7 +51,7 @@ interface SeederMigratorInterface
      *
      * @return array
      */
-    public function reset($paths = [], $pretend = false): array;
+    public function reset($paths = [], $pretend = false);
 
     /**
      * Rollback the last migration operation.
@@ -61,7 +61,7 @@ interface SeederMigratorInterface
      *
      * @return array
      */
-    public function rollback($paths = [], array $options = []): array;
+    public function rollback($paths = [], array $options = []);
 
     /**
      * Resolve a migration instance from a file.
@@ -77,19 +77,19 @@ interface SeederMigratorInterface
      *
      * @return array
      */
-    public function getNotes(): array;
+    public function getNotes();
 
     /**
      * Set the default connection name.
      *
      * @param  string $name
      */
-    public function setConnection($name): void;
+    public function setConnection($name);
 
     /**
      * Determine if the migration repository exists.
      *
      * @return bool
      */
-    public function repositoryExists(): bool;
+    public function repositoryExists();
 }

@@ -121,6 +121,8 @@ class SeederRun extends Command
             $paths[] = $seedersPath . DIRECTORY_SEPARATOR . $env;
         }
 
+        $paths[] = $seedersPath;
+
         return $paths;
     }
 

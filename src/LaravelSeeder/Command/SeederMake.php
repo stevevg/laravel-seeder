@@ -58,36 +58,43 @@ class SeederMake extends MigrateMakeCommand
      */
     protected function writeMigration($model, $table, $created)
     {
-        $message = 'Created Seeder';
+        $env = $this->resolveEnvironment();
 
-        $migrationPath = $this->getMigrationPath();
-
-        if ($env = $this->option('env')) {
-            $migrationPath .= DIRECTORY_SEPARATOR . $env;
-            $message .= ' for ' . ucfirst($env) . ' environment';
-        }
-
-        $migration = $this->creator->create($model, $migrationPath);
+        $migration = $this->creator->create($model, $this->getOutputPath($env));
 
         $file = pathinfo($migration, PATHINFO_FILENAME);
 
-        $this->line('<info>' . $message . ':</info>' . " {$file}");
+        $this->line('<info>Created Seeder for ' . ucfirst($env) . ' environment:</info>' . " {$file}");
 
         return $file;
     }
 
     /**
-     * Get migration path (either specified by '--path' option or default location).
+     * Resolves the environment from input or from the Laravel application.
      *
      * @return string
      */
-    protected function getMigrationPath()
+    protected function resolveEnvironment(): string
     {
-        if (!empty($targetPath = $this->option('path'))) {
-            return $this->laravel->basePath() . DIRECTORY_SEPARATOR . $targetPath;
-        }
+        return ($this->input->getOption('env')) ?: App::environment();
+    }
 
-        return database_path(config('seeders.dir'));
+    /**
+     * Get migration path (either specified by '--path' option or default location).
+     *
+     * @param string $env
+     *
+     * @return string
+     */
+    protected function getOutputPath(string $env)
+    {
+        $targetPath = $this->input->getOption('path');
+
+        $path = (empty($targetPath))
+            ? database_path(config('seeders.dir'))
+            : $this->laravel->basePath() . DIRECTORY_SEPARATOR . $targetPath;
+
+        return $path . DIRECTORY_SEPARATOR . $env;
     }
 
     /**

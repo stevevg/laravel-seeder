@@ -33,8 +33,10 @@ class SeederRollback extends AbstractSeederMigratorCommand
             return;
         }
 
-        // Rolls back the migrator.
+        // Prepare the migrator.
         $this->prepareMigrator();
+
+        // Rolls back the migrator.
         $this->migrator->rollback($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to

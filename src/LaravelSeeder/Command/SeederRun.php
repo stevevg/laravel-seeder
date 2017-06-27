@@ -32,8 +32,11 @@ class SeederRun extends AbstractSeederMigratorCommand
             return;
         }
 
-        // Execute the migrator.
+        // Prepare the migrator.
         $this->prepareMigrator();
+
+        // Execute the migrator.
+        $this->info('Seeding data for ' . ucfirst($this->getEnvironment()) . ' environment...');
         $this->migrator->run($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to

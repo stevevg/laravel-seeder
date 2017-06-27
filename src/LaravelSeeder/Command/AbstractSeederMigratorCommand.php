@@ -112,7 +112,7 @@ abstract class AbstractSeederMigratorCommand extends Command
      */
     protected function resolveMigrationPaths(): void
     {
-        $pathFromConfig = database_path(database_path(config('seeders.dir')));
+        $pathFromConfig = database_path(config('seeders.dir'));
 
         $pathWithEnv = $pathFromConfig . DIRECTORY_SEPARATOR . $this->getEnvironment();
 

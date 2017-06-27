@@ -19,7 +19,7 @@ class SeedStatus extends AbstractSeedMigratorCommand
      *
      * @var string
      */
-    protected $description = 'Show the status of each migration';
+    protected $description = 'Show the status of each seeder';
 
     /**
      * Execute the console command.

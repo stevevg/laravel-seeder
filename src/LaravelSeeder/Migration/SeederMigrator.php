@@ -167,8 +167,6 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
         foreach ($migrations as $migration) {
             $migration = (object)$migration;
 
-            dd($migration);
-
             $rolledBack[] = $files[$migration->seed];
 
             $this->runDown(

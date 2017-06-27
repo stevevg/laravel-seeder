@@ -1,13 +1,11 @@
-# Crap
+# OS
 .DS_Store
-bin
-coverage
-
-# Composer
-composer.phar
-composer.lock
-vendor
 
 # IDE
 .idea
 *.sublime-*
+
+# Composer
+composer.phar
+composer.lock
+vendor/

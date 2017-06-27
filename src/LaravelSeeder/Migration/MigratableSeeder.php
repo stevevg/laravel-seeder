@@ -1,6 +1,6 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Migrator;
+namespace Eighty8\LaravelSeeder\Migration;
 
 interface MigratableSeeder
 {

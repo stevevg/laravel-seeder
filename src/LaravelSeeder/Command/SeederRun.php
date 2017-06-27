@@ -2,7 +2,7 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
+use Eighty8\LaravelSeeder\Migration\SeederMigrator;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Migrator;
+namespace Eighty8\LaravelSeeder\Migration;
 
 use App;
 use Config;
@@ -11,7 +11,7 @@ use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-class SeederMigrator extends Migrator
+class SeederMigrator extends Migrator implements SeederMigratorInterface
 {
     /**
      * The migration repository implementation.
@@ -23,7 +23,7 @@ class SeederMigrator extends Migrator
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
@@ -71,13 +71,33 @@ class SeederMigrator extends Migrator
     }
 
     /**
-     * Sets environment.
+     * Set the environment to run the seeds against.
      *
-     * @param string $env
+     * @param $env
      */
     public function setEnvironment(string $env): void
     {
         $this->repository->setEnvironment($env);
+    }
+
+    /**
+     * Gets the environment the seeds are ran against.
+     *
+     * @return string|null
+     */
+    public function getEnvironment(): ?string
+    {
+        return $this->repository->getEnvironment();
+    }
+
+    /**
+     * Determines whether an environment has been set.
+     *
+     * @return bool
+     */
+    public function hasEnvironment(): bool
+    {
+        return $this->repository->hasEnvironment();
     }
 
     /**
@@ -91,8 +111,8 @@ class SeederMigrator extends Migrator
     {
         $files = [];
 
-        if (!$this->repository->hasEnvironment()) {
-            $files = array_merge($files, $this->files->glob("$path/{$this->repository->getEnvironment()}/*.php"));
+        if (!$this->hasEnvironment()) {
+            $files = array_merge($files, $this->files->glob("$path/{$this->getEnvironment()}/*.php"));
         }
 
         $files = array_merge($files, $this->files->glob($path . '/*.php'));
@@ -117,32 +137,19 @@ class SeederMigrator extends Migrator
     }
 
     /**
-     * Run the outstanding migrations at a given path.
+     * Run a single migration at a given path.
      *
      * @param  string $path
-     * @param  bool $pretend
+     * @param  array $options
      */
-    public function runSingleFile($path, $pretend = false): void
+    public function runSingleFile(string $path, array $options = []): void
     {
-        $this->notes = [];
         $file = str_replace('.php', '', basename($path));
-        $files = [$file];
 
         // Once we grab all of the migration files for the path, we will compare them
         // against the migrations that have already been run for this package then
         // run each of the outstanding migrations against a database connection.
-        $ran = $this->repository->getRan();
-
-        $migrations = array_diff($files, $ran);
-        $filename_ext = pathinfo($path, PATHINFO_EXTENSION);
-
-        if (!$filename_ext) {
-            $path .= '.php';
-        }
-
-        $this->files->requireOnce($path);
-
-        $this->runPending($migrations, $pretend);
+        $this->run([$file], $options);
     }
 
     /**
@@ -189,7 +196,11 @@ class SeederMigrator extends Migrator
         if (File::exists($filePath)) {
             require_once $filePath;
         } else {
-            require_once database_path(config('seeders.dir') . '/' . $this->repository->getEnvironment() . '/' . $file . '.php');
+            $env = ($this->hasEnvironment())
+                ? $this->getEnvironment()
+                : $this->resolveEnvironment();
+
+            require_once database_path(config('seeders.dir') . '/' . $env . '/' . $file . '.php');
         }
 
         $class = Str::studly(implode('_', array_slice(explode('_', $file), 4)));
@@ -229,5 +240,15 @@ class SeederMigrator extends Migrator
         $this->repository->delete($seed);
 
         $this->note("<info>Rolled back:</info> $file");
+    }
+
+    /**
+     * Resolves the application's environment.
+     *
+     * @return string
+     */
+    protected function resolveEnvironment(): string
+    {
+        return App::environment();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
+use Eighty8\LaravelSeeder\Migration\SeederMigrator;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -60,7 +60,7 @@ class SeederReset extends Command
         $this->prepareDatabase();
 
         if (File::exists(database_path(config('seeders.dir')))) {
-            $this->migrator->setEnv($env);
+            $this->migrator->setEnvironment($env);
         }
 
         $this->migrator->setConnection($this->input->getOption('database'));

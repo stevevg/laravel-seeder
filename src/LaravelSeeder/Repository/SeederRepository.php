@@ -58,7 +58,7 @@ class SeederRepository implements SeederRepositoryInterface
     public function getRan(): array
     {
         return $this->table()
-            ->where('env', '=', $this->resolveEnvironment())
+            ->where('env', '=', $this->getEnvironment())
             ->pluck('seed')
             ->toArray();
     }
@@ -80,29 +80,7 @@ class SeederRepository implements SeederRepositoryInterface
      */
     public function getConnection(): Connection
     {
-        return $this->getConnectionResolver()->connection($this->connection);
-    }
-
-    /**
-     * Get the connection resolver instance.
-     *
-     * @return ConnectionResolverInterface
-     */
-    protected function getConnectionResolver(): ConnectionResolverInterface
-    {
-        return $this->connectionResolver;
-    }
-
-    /**
-     * Resolves the environment to use for the repository.
-     *
-     * @return string
-     */
-    protected function resolveEnvironment(): string
-    {
-        return ($this->hasEnvironment())
-            ? $this->getEnvironment()
-            : App::environment();
+        return $this->connectionResolver->connection($this->connection);
     }
 
     /**
@@ -118,11 +96,11 @@ class SeederRepository implements SeederRepositoryInterface
     /**
      * Gets the environment the seeds are ran against.
      *
-     * @return string
+     * @return string|null
      */
-    public function getEnvironment(): string
+    public function getEnvironment(): ?string
     {
-        return $this->resolveEnvironment();
+        return $this->environment;
     }
 
     /**
@@ -143,7 +121,7 @@ class SeederRepository implements SeederRepositoryInterface
     public function getLast(): array
     {
         return $this->table()
-            ->where('env', '=', $this->resolveEnvironment())
+            ->where('env', '=', $this->getEnvironment())
             ->where('batch', $this->getLastBatchNumber())
             ->orderBy('seed', 'desc')
             ->get()
@@ -158,7 +136,7 @@ class SeederRepository implements SeederRepositoryInterface
     protected function getLastBatchNumber(): int
     {
         return $this->table()
-            ->where('env', '=', $this->resolveEnvironment())
+            ->where('env', '=', $this->getEnvironment())
             ->max('batch');
     }
 
@@ -174,7 +152,7 @@ class SeederRepository implements SeederRepositoryInterface
     {
         $this->table()->insert([
             'seed' => $file,
-            'env' => $this->resolveEnvironment(),
+            'env' => $this->getEnvironment(),
             'batch' => $batch
         ]);
     }
@@ -187,7 +165,7 @@ class SeederRepository implements SeederRepositoryInterface
     public function delete($seeder): void
     {
         $this->table()
-            ->where('env', '=', $this->resolveEnvironment())
+            ->where('env', '=', $this->getEnvironment())
             ->where('seed', $seeder->seed)
             ->delete();
     }

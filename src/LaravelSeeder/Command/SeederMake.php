@@ -2,16 +2,12 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use Config;
-use File;
-use Illuminate\Console\Command;
+use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederMake extends Command
+class SeederMake extends MigrateMakeCommand
 {
-    const MIGRATABLE_SEEDER_STUB_PATH = __DIR__ . '/../../../stubs/MigratableSeeder.stub';
-
     /**
      * The console command name.
      *
@@ -27,100 +23,72 @@ class SeederMake extends Command
     protected $description = 'Generates a migratable Seeder class';
 
     /**
+     * The console command signature.
+     *
+     * @var string
+     */
+    protected $signature = 'seeder:make {model : The name of the model you wish to seed.}
+        {--env= : The environment to create the seeder for.}
+        {--path= : The relative path from the base path to generate the seed to.}';
+
+    /**
      * Execute the console command.
      */
     public function fire(): void
     {
-        // Get parameters from user input
-        $env = $this->option('env');
-        $path = $this->option('path');
-        $model = ucfirst($this->argument('model'));
+        // It's possible for the developer to specify the environment for the seeder.
+        // The developer may also specify the path.
+        $model = ucfirst(trim($this->argument('model')));
 
-        // Generates the Seeder class
-        $filename = $this->generateSeeder($model, $path, $env);
+        // Now we are ready to write the migration out to disk. Once we've written
+        // the migration out, we will dump-autoload for the entire framework to
+        // make sure that the migrations are registered by the class loaders.
+        $this->writeMigration($model, null, null);
 
-        // Output message
-        $this->printMessage($model, $filename, $env);
+        $this->composer->dumpAutoloads();
     }
 
     /**
-     * Generates the Seeder class.
+     * Write the migration file to disk.
      *
-     * @param string $model
-     * @param string $outputPath
+     * @param  string $model
+     * @param  string $table
+     * @param  bool $created
      *
      * @return string
      */
-    private function generateSeeder(string $model, ?string $path, ?string $env): string
+    protected function writeMigration($model, $table, $created)
     {
-        // Generate filename
-        $createdTimestamp = date('Y_m_d_His');
-        $fileName = $this->getOutputPath($path, $env) . "/{$createdTimestamp}_{$model}" . 'Seeder.php';
+        $message = 'Created Seeder';
 
-        // Generate class name
-        $className = '';
-        if ($env) {
-            $className .= ucwords($env);
+        $migrationPath = $this->getMigrationPath();
+
+        if ($env = $this->option('env')) {
+            $migrationPath .= DIRECTORY_SEPARATOR . $env;
+            $message .= ' for ' . ucfirst($env) . ' environment';
         }
-        $className .= $model . 'Seeder';
 
-        // Generate the Seeder class from the stub file
-        $stub = File::get(self::MIGRATABLE_SEEDER_STUB_PATH);
-        $stub = str_replace('{{class}}', $className, $stub);
-        $stub = str_replace('{{model}}', $model, $stub);
+        $migration = $this->creator->create($model, $migrationPath);
 
-        // Create Seeder class
-        File::put($fileName, $stub);
+        $file = pathinfo($migration, PATHINFO_FILENAME);
 
-        // Return the filename
-        return $fileName;
+        $this->line('<info>' . $message . ':</info>' . "{$file}");
+
+        return $file;
     }
 
     /**
-     * Gets the output path for the file to be generated
-     *
-     * @param string|null $path
-     * @param string|null $env
+     * Get migration path (either specified by '--path' option or default location).
      *
      * @return string
      */
-    private function getOutputPath(?string $path, ?string $env): string
+    protected function getMigrationPath()
     {
-        // Resolve the path from configuration or parameter
-        $path = (empty($path))
-            ? database_path(config('seeders.dir'))
-            : base_path($path);
-
-        // Check if an environment was passed in
-        if (!empty($env)) {
-            $path .= "/$env";
+        if (!empty($targetPath = $this->option('path'))) {
+            return $this->laravel->basePath() . DIRECTORY_SEPARATOR . $targetPath;
         }
 
-        // Ensure the directory exists
-        if (!File::exists($path)) {
-            File::makeDirectory($path, 0755, true);
-        }
-
-        return $path;
-    }
-
-    /**
-     * Prints the message.
-     *
-     * @param string $model
-     * @param string|null $env
-     */
-    private function printMessage(string $model, string $filename, ?string $env): void
-    {
-        $message = 'Seeder created for ' . $model;
-
-        if (!empty($env)) {
-            $message .= ' for ' . $env . ' environment';
-        }
-
-        $message .= ': ' . $filename;
-
-        $this->line($message);
+        return database_path(config('seeders.dir'));
     }
 
     /**
@@ -143,7 +111,13 @@ class SeederMake extends Command
     protected function getOptions(): array
     {
         return [
-            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to seed to.', null],
+            [
+                'env',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The environment to create the seeder for.',
+                null
+            ],
             [
                 'path',
                 null,

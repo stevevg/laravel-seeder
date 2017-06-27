@@ -10,9 +10,12 @@ use Eighty8\LaravelSeeder\Command\SeederRefresh;
 use Eighty8\LaravelSeeder\Command\SeederReset;
 use Eighty8\LaravelSeeder\Command\SeederRollback;
 use Eighty8\LaravelSeeder\Command\SeederRun;
-use Eighty8\LaravelSeeder\Migrator\SeederMigrator;
+use Eighty8\LaravelSeeder\Migration\SeederMigrationCreator;
+use Eighty8\LaravelSeeder\Migration\SeederMigrator;
+use Eighty8\LaravelSeeder\Migration\SeederMigratorInterface;
 use Eighty8\LaravelSeeder\Repository\SeederRepository;
 use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
+use Illuminate\Support\Composer;
 use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
@@ -70,6 +73,14 @@ class SeederServiceProvider extends ServiceProvider
         $this->app->singleton(SeederMigrator::class, function ($app) {
             return new SeederMigrator($app[SeederRepositoryInterface::class], $app['db'], $app['files']);
         });
+
+        $this->app->bind(SeederMigratorInterface::class, function ($app) {
+            return $app[SeederMigrator::class];
+        });
+
+        $this->app->singleton(SeederMigrationCreator::class, function ($app) {
+            return new SeederMigrationCreator($app['files']);
+        });
     }
 
     /**
@@ -89,8 +100,8 @@ class SeederServiceProvider extends ServiceProvider
             return new SeederInstall($app[SeederRepositoryInterface::class]);
         });
 
-        $this->app->bind(SeederMake::class, function () {
-            return new SeederMake();
+        $this->app->bind(SeederMake::class, function ($app) {
+            return new SeederMake($app[SeederMigrationCreator::class], $app[Composer::class]);
         });
 
         $this->app->bind(SeederReset::class, function ($app) {
@@ -127,6 +138,8 @@ class SeederServiceProvider extends ServiceProvider
             SeederRepository::class,
             SeederRepositoryInterface::class,
             SeederMigrator::class,
+            SeederMigratorInterface::class,
+            SeederMigrationCreator::class,
             DbSeedOverride::class,
             SeederRun::class,
             SeederInstall::class,

@@ -1,15 +1,21 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Repository;
+namespace Eighty8\LaravelSeeder\Migration;
 
-use Illuminate\Database\Migrations\MigrationRepositoryInterface;
-
-interface SeederRepositoryInterface extends MigrationRepositoryInterface
+interface SeederMigratorInterface
 {
+    /**
+     * Run a single migration at a given path.
+     *
+     * @param  string $path
+     * @param  array $options
+     */
+    public function runSingleFile(string $path, array $options = []): void;
+
     /**
      * Set the environment to run the seeds against.
      *
-     * @param string $env
+     * @param $env
      */
     public function setEnvironment(string $env): void;
 

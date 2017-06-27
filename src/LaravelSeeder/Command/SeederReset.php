@@ -36,7 +36,8 @@ class SeederReset extends AbstractSeederMigratorCommand
         // Prepare the migrator.
         $this->prepareMigrator();
 
-        // Resets the migrator.
+        // Reset the migrator.
+        $this->info('Removing seeded data for ' . ucfirst($this->getEnvironment()) . ' environment...');
         $this->migrator->reset($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to
@@ -46,7 +47,7 @@ class SeederReset extends AbstractSeederMigratorCommand
             $this->output->writeln($note);
         }
 
-        $this->info('Seeders reset for ' . ucfirst($this->getEnvironment()) . ' environment');
+        $this->info('Removed seeded data for ' . ucfirst($this->getEnvironment()) . ' environment');
     }
 
     /**

@@ -2,10 +2,7 @@
 
 namespace Eighty8\LaravelSeeder\Migration;
 
-use App;
-use Config;
 use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
-use File;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
@@ -147,6 +144,29 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
+     * Reset the given migrations.
+     *
+     * @param  array $migrations
+     * @param  array $paths
+     * @param  bool $pretend
+     *
+     * @return array
+     */
+    protected function resetMigrations(array $migrations, array $paths, $pretend = false)
+    {
+        // Since the getRan method that retrieves the migration name just gives us the
+        // migration name, we will format the names into objects with the name as a
+        // property on the objects so that we can pass it to the rollback method.
+        $migrations = collect($migrations)->map(function ($m) {
+            return (object)['seed' => $m];
+        })->all();
+
+        return $this->rollbackMigrations(
+            $migrations, $paths, compact('pretend')
+        );
+    }
+
+    /**
      * Rollback the given migrations.
      *
      * @param  array $migrations
@@ -203,6 +223,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
             return;
         }
 
+        // Run "down" the seeder
         $seeder->down();
 
         // Once we have successfully run the seeder "down" we will remove it from

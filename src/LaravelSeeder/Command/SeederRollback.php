@@ -2,7 +2,6 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use File;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 

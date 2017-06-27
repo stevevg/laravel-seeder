@@ -89,24 +89,16 @@ class SeederServiceProvider extends ServiceProvider
      */
     private function registerCommands(): void
     {
-        $this->app->bind(OverrideDbSeed::class, function ($app) {
-            return new OverrideDbSeed($app[SeederMigrator::class]);
-        });
-
-        $this->app->bind(OverrideMakeSeeder::class, function ($app) {
-            return new OverrideMakeSeeder($app[SeederMigrationCreator::class], $app[Composer::class]);
-        });
-
-        $this->app->bind(SeederRun::class, function ($app) {
-            return new SeederRun($app[SeederMigrator::class]);
-        });
-
         $this->app->bind(SeederInstall::class, function ($app) {
             return new SeederInstall($app[SeederRepositoryInterface::class]);
         });
 
         $this->app->bind(SeederMake::class, function ($app) {
             return new SeederMake($app[SeederMigrationCreator::class], $app[Composer::class]);
+        });
+
+        $this->app->bind(SeederRefresh::class, function () {
+            return new SeederRefresh();
         });
 
         $this->app->bind(SeederReset::class, function ($app) {
@@ -117,19 +109,17 @@ class SeederServiceProvider extends ServiceProvider
             return new SeederRollback($app[SeederMigrator::class]);
         });
 
-        $this->app->bind(SeederRefresh::class, function () {
-            return new SeederRefresh();
+        $this->app->bind(SeederRun::class, function ($app) {
+            return new SeederRun($app[SeederMigrator::class]);
         });
 
         $this->commands([
-            OverrideDbSeed::class,
-            OverrideMakeSeeder::class,
-            SeederRun::class,
             SeederInstall::class,
             SeederMake::class,
+            SeederRefresh::class,
             SeederReset::class,
             SeederRollback::class,
-            SeederRefresh::class,
+            SeederRun::class,
         ]);
     }
 
@@ -146,14 +136,12 @@ class SeederServiceProvider extends ServiceProvider
             SeederMigrator::class,
             SeederMigratorInterface::class,
             SeederMigrationCreator::class,
-            OverrideDbSeed::class,
-            OverrideMakeSeeder::class,
-            SeederRun::class,
             SeederInstall::class,
             SeederMake::class,
+            SeederRefresh::class,
             SeederReset::class,
             SeederRollback::class,
-            SeederRefresh::class,
+            SeederRun::class,
         ];
     }
 }

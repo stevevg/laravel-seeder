@@ -45,6 +45,8 @@ class SeederRun extends AbstractSeederMigratorCommand
         foreach ($this->migrator->getNotes() as $note) {
             $this->output->writeln($note);
         }
+
+        $this->info('Seeded data for ' . ucfirst($this->getEnvironment()) . ' environment');
     }
 
     /**

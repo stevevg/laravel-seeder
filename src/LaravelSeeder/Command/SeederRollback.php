@@ -36,6 +36,7 @@ class SeederRollback extends AbstractSeederMigratorCommand
         $this->prepareMigrator();
 
         // Rolls back the migrator.
+        $this->info('Rolling back seeded data for ' . ucfirst($this->getEnvironment()) . ' environment...');
         $this->migrator->rollback($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to
@@ -44,6 +45,8 @@ class SeederRollback extends AbstractSeederMigratorCommand
         foreach ($this->migrator->getNotes() as $note) {
             $this->output->writeln($note);
         }
+
+        $this->info('Rolled back seeded data for ' . ucfirst($this->getEnvironment()) . ' environment');
     }
 
     /**

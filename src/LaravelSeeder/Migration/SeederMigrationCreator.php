@@ -7,7 +7,8 @@ use InvalidArgumentException;
 
 class SeederMigrationCreator extends MigrationCreator
 {
-    const STUB_PATH = __DIR__ . '/../../stubs';
+    const STUB_PATH = __DIR__ . '/../../../stubs';
+    const STUB_FILE = 'MigratableSeeder.stub';
 
     /**
      * Ensure that a migration with the given name doesn't already exist.
@@ -51,7 +52,7 @@ class SeederMigrationCreator extends MigrationCreator
      */
     protected function getStub($table, $create)
     {
-        return $this->files->get($this->stubPath() . '/MigratableSeeder.stub');
+        return $this->files->get($this->stubPath() . DIRECTORY_SEPARATOR . self::STUB_FILE);
     }
 
     /**

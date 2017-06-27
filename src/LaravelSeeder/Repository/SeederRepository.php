@@ -135,9 +135,11 @@ class SeederRepository implements SeederRepositoryInterface
      */
     protected function getLastBatchNumber(): int
     {
-        return $this->table()
+        $max = $this->table()
             ->where('env', '=', $this->getEnvironment())
             ->max('batch');
+
+        return ($max) ?: 0;
     }
 
     /**

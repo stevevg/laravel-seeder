@@ -55,7 +55,6 @@ class SeederRun extends Command
 
         // Get options from user input
         $env = $this->option('env');
-        $single = $this->option('file');
 
         // The pretend option can be used for "simulating" the migration and grabbing
         // the SQL queries that would fire if the migration were to be run against
@@ -68,13 +67,7 @@ class SeederRun extends Command
         $this->prepareMigrator($env);
 
         // Get the path for the migrations
-        $path = database_path(config('seeders.dir'));
-
-        if ($single) {
-            $this->migrator->runSingleFile("$path/$single", $options);
-        } else {
-            $this->migrator->run($path, $options);
-        }
+        $this->migrator->run($this->getMigrationPaths($env), $options);
 
         // Once the migrator has run we will grab the note output and send it out to
         // the console screen, since the migrator itself functions without having
@@ -112,6 +105,26 @@ class SeederRun extends Command
     }
 
     /**
+     * Gets all seeder migration paths.
+     *
+     * @param string|null $env
+     *
+     * @return array
+     */
+    private function getMigrationPaths(?string $env): array
+    {
+        $paths = [];
+
+        $seedersPath = database_path(config('seeders.dir'));
+
+        if ($env) {
+            $paths[] = $seedersPath . DIRECTORY_SEPARATOR . $env;
+        }
+
+        return $paths;
+    }
+
+    /**
      * Get the console command options.
      *
      * @return array
@@ -121,7 +134,6 @@ class SeederRun extends Command
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment in which to run the seeds.', null],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
-            ['file', null, InputOption::VALUE_OPTIONAL, 'Allows individual seed files to be run.', null],
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
             ['pretend', null, InputOption::VALUE_NONE, 'Dump the SQL queries that would be run.'],
         ];

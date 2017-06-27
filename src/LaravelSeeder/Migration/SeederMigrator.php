@@ -9,7 +9,6 @@ use File;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 
 class SeederMigrator extends Migrator implements SeederMigratorInterface
 {
@@ -101,42 +100,6 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Get all of the migration files in a given path.
-     *
-     * @param  string $path
-     *
-     * @return array
-     */
-    public function getMigrationFiles($path): array
-    {
-        $files = [];
-
-        if (!$this->hasEnvironment()) {
-            $files = array_merge($files, $this->files->glob("$path/{$this->getEnvironment()}/*.php"));
-        }
-
-        $files = array_merge($files, $this->files->glob($path . '/*.php'));
-
-        // Once we have the array of files in the directory we will just remove the
-        // extension and take the basename of the file which is all we need when
-        // finding the migrations that haven't been run against the databases.
-        if ($files === false) {
-            return [];
-        }
-
-        $files = array_map(function ($file) {
-            return str_replace('.php', '', basename($file));
-        }, $files);
-
-        // Once we have all of the formatted file names we will sort them and since
-        // they all start with a timestamp this should give us the migrations in
-        // the order they were actually created by the application developers.
-        sort($files);
-
-        return $files;
-    }
-
-    /**
      * Run a single migration at a given path.
      *
      * @param  string $path
@@ -191,21 +154,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
      */
     public function resolve($file): MigratableSeeder
     {
-        $filePath = database_path(config('seeders.dir') . '/' . $file . '.php');
-
-        if (File::exists($filePath)) {
-            require_once $filePath;
-        } else {
-            $env = ($this->hasEnvironment())
-                ? $this->getEnvironment()
-                : $this->resolveEnvironment();
-
-            require_once database_path(config('seeders.dir') . '/' . $env . '/' . $file . '.php');
-        }
-
-        $class = Str::studly(implode('_', array_slice(explode('_', $file), 4)));
-
-        return new $class();
+        return parent::resolve($file);
     }
 
     /**

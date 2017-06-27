@@ -72,7 +72,7 @@ class SeederMake extends MigrateMakeCommand
 
         $file = pathinfo($migration, PATHINFO_FILENAME);
 
-        $this->line('<info>' . $message . ':</info>' . "{$file}");
+        $this->line('<info>' . $message . ':</info>' . " {$file}");
 
         return $file;
     }

@@ -18,11 +18,23 @@ class SeederMigrationCreator extends MigrationCreator
      *
      * @throws \InvalidArgumentException
      */
-    protected function ensureMigrationDoesntAlreadyExist($model)
+    protected function ensureMigrationDoesntAlreadyExist($model): void
     {
         if (class_exists($className = $this->getClassName($model))) {
             throw new InvalidArgumentException("A {$className} seeder already exists.");
         }
+    }
+
+    /**
+     * Get the class name of a migration name.
+     *
+     * @param  string $model
+     *
+     * @return string
+     */
+    protected function getClassName($model): string
+    {
+        return ucwords($model) . 'Seeder';
     }
 
     /**
@@ -34,7 +46,7 @@ class SeederMigrationCreator extends MigrationCreator
      *
      * @return string
      */
-    protected function populateStub($model, $stub, $table)
+    protected function populateStub($model, $stub, $table): string
     {
         $stub = str_replace('{{class}}', $this->getClassName($model), $stub);
         $stub = str_replace('{{model}}', $model, $stub);
@@ -50,20 +62,9 @@ class SeederMigrationCreator extends MigrationCreator
      *
      * @return string
      */
-    protected function getStub($table, $create)
+    protected function getStub($table, $create): string
     {
         return $this->files->get($this->stubPath() . DIRECTORY_SEPARATOR . self::STUB_FILE);
-    }
-
-    /**
-     * Get the class name of a migration name.
-     *
-     * @param  string $model
-     * @return string
-     */
-    protected function getClassName($model)
-    {
-        return ucwords($model) . 'Seeder';
     }
 
     /**
@@ -74,5 +75,18 @@ class SeederMigrationCreator extends MigrationCreator
     public function stubPath(): string
     {
         return self::STUB_PATH;
+    }
+
+    /**
+     * Get the full path to the migration.
+     *
+     * @param  string $name
+     * @param  string $path
+     *
+     * @return string
+     */
+    protected function getPath($name, $path): string
+    {
+        return $path . DIRECTORY_SEPARATOR . $this->getDatePrefix() . '_' . $this->getClassName($name) . '.php';
     }
 }

@@ -5,14 +5,6 @@ namespace Eighty8\LaravelSeeder\Migration;
 interface SeederMigratorInterface
 {
     /**
-     * Run a single migration at a given path.
-     *
-     * @param  string $path
-     * @param  array $options
-     */
-    public function runSingleFile(string $path, array $options = []): void;
-
-    /**
      * Set the environment to run the seeds against.
      *
      * @param $env

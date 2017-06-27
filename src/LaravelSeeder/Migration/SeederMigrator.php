@@ -100,22 +100,6 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Run a single migration at a given path.
-     *
-     * @param  string $path
-     * @param  array $options
-     */
-    public function runSingleFile(string $path, array $options = []): void
-    {
-        $file = str_replace('.php', '', basename($path));
-
-        // Once we grab all of the migration files for the path, we will compare them
-        // against the migrations that have already been run for this package then
-        // run each of the outstanding migrations against a database connection.
-        $this->run([$file], $options);
-    }
-
-    /**
      * Run "up" a migration instance.
      *
      * @param  string $file
@@ -127,7 +111,9 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
         // First we will resolve a "real" instance of the seeder class from this
         // seeder file name. Once we have the instances we can run the actual
         // command such as "up" or "down", or we can just simulate the action.
-        $seeder = $this->resolve($file);
+        $seeder = $this->resolve(
+            $name = $this->getMigrationName($file)
+        );
 
         if ($pretend) {
             $this->pretendToRun($seeder, 'run');
@@ -135,14 +121,16 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
             return;
         }
 
+        $this->note("<comment>Seeding:</comment> {$name}");
+
         $seeder->run();
 
         // Once we have run a migrations class, we will log that it was run in this
         // repository so that we don't try to run it next time we do a seeder
         // in the application. A seeder repository keeps the migrate order.
-        $this->repository->log($file, $batch);
+        $this->repository->log($name, $batch);
 
-        $this->note("<info>Seeded:</info> $file");
+        $this->note("<info>Seeded:</info> $name");
     }
 
     /**

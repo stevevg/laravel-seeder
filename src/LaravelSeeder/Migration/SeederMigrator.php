@@ -100,6 +100,24 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
+     * Run the pending migrations at a given path.
+     *
+     * @param array $paths
+     * @param array $options
+     *
+     * @return array
+     */
+    public function run($paths = [], array $options = [])
+    {
+        // Resolve the environment if one isn't set
+        if (!$this->hasEnvironment()) {
+            $this->setEnvironment($this->resolveEnvironment());
+        }
+
+        return parent::run($paths, $options);
+    }
+
+    /**
      * Run "up" a migration instance.
      *
      * @param  string $file

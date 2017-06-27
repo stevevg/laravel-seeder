@@ -9,6 +9,7 @@ use File;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 
 class SeederMigrator extends Migrator implements SeederMigratorInterface
 {
@@ -100,7 +101,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Run "up" a migration instance.
+     * Run "up" a seeder instance.
      *
      * @param  string $file
      * @param  int $batch
@@ -115,13 +116,13 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
             $name = $this->getMigrationName($file)
         );
 
+        $this->note("<comment>Seeding:</comment> {$name}");
+
         if ($pretend) {
             $this->pretendToRun($seeder, 'run');
 
             return;
         }
-
-        $this->note("<comment>Seeding:</comment> {$name}");
 
         $seeder->run();
 
@@ -146,20 +147,57 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Run "down" a migration instance.
+     * Rollback the given migrations.
+     *
+     * @param  array $migrations
+     * @param  array|string $paths
+     * @param  array $options
+     *
+     * @return array
+     */
+    protected function rollbackMigrations(array $migrations, $paths, array $options)
+    {
+        $rolledBack = [];
+
+        $this->requireFiles($files = $this->getMigrationFiles($paths));
+
+        // Next we will run through all of the migrations and call the "down" method
+        // which will reverse each migration in order. This getLast method on the
+        // repository already returns these migration's names in reverse order.
+        foreach ($migrations as $migration) {
+            $migration = (object)$migration;
+
+            dd($migration);
+
+            $rolledBack[] = $files[$migration->seed];
+
+            $this->runDown(
+                $files[$migration->seed],
+                $migration, Arr::get($options, 'pretend', false)
+            );
+        }
+
+        return $rolledBack;
+    }
+
+    /**
+     * Run "down" a seeder instance.
      *
      * @param  string $file
      * @param  object $migration
      * @param  bool $pretend
+     * @return void
      */
-    protected function runDown($seed, $migration, $pretend): void
+    protected function runDown($file, $migration, $pretend): void
     {
-        $file = $seed->seed;
+        // First we will get the file name of the seeder so we can resolve out an
+        // instance of the seeder. Once we get an instance we can either run a
+        // pretend execution of the seeder or we can run the real seeder.
+        $seeder = $this->resolve(
+            $name = $this->getMigrationName($file)
+        );
 
-        // First we will get the file name of the migration so we can resolve out an
-        // seeder of the migration. Once we get an seeder we can either run a
-        // pretend execution of the migration or we can run the real migration.
-        $seeder = $this->resolve($file);
+        $this->note("<comment>Rolling back:</comment> {$name}");
 
         if ($pretend) {
             $this->pretendToRun($seeder, 'down');
@@ -167,15 +205,13 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
             return;
         }
 
-        if (method_exists($seeder, 'down')) {
-            $seeder->down();
-        }
+        $seeder->down();
 
-        // Once we have successfully run the migration "down" we will remove it from
+        // Once we have successfully run the seeder "down" we will remove it from
         // the migration repository so it will be considered to have not been run
         // by the application then will be able to fire by any later operation.
-        $this->repository->delete($seed);
+        $this->repository->delete($migration);
 
-        $this->note("<info>Rolled back:</info> $file");
+        $this->note("<info>Rolled back:</info>  {$name}");
     }
 }

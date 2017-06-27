@@ -12,6 +12,8 @@ class {{class}} extends Seeder implements MigratableSeeder
     public function run(): void
     {
         Model::unguard();
+
+        // Seed your data
     }
 
     /**
@@ -21,6 +23,6 @@ class {{class}} extends Seeder implements MigratableSeeder
     {
         Model::unguard();
 
-        {{model}}::truncate();
+        // Remove your data
     }
 }

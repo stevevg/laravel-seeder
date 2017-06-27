@@ -13,43 +13,42 @@ class SeederMigrationCreator extends MigrationCreator
     /**
      * Ensure that a migration with the given name doesn't already exist.
      *
-     * @param  string $model
+     * @param  string $name
      * @return void
      *
      * @throws \InvalidArgumentException
      */
-    protected function ensureMigrationDoesntAlreadyExist($model): void
+    protected function ensureMigrationDoesntAlreadyExist($name): void
     {
-        if (class_exists($className = $this->getClassName($model))) {
-            throw new InvalidArgumentException("A {$className} seeder already exists.");
+        if (class_exists($className = $this->getClassName($name))) {
+            throw new InvalidArgumentException("{$className} already exists.");
         }
     }
 
     /**
      * Get the class name of a migration name.
      *
-     * @param  string $model
+     * @param  string $name
      *
      * @return string
      */
-    protected function getClassName($model): string
+    protected function getClassName($name): string
     {
-        return ucwords($model) . 'Seeder';
+        return ucwords($name) . 'Seeder';
     }
 
     /**
      * Populate the place-holders in the migration stub.
      *
-     * @param  string $model
+     * @param  string $name
      * @param  string $stub
      * @param  string $table
      *
      * @return string
      */
-    protected function populateStub($model, $stub, $table): string
+    protected function populateStub($name, $stub, $table): string
     {
-        $stub = str_replace('{{class}}', $this->getClassName($model), $stub);
-        $stub = str_replace('{{model}}', $model, $stub);
+        $stub = str_replace('{{class}}', $this->getClassName($name), $stub);
 
         return $stub;
     }

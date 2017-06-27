@@ -27,7 +27,7 @@ class SeederMake extends MigrateMakeCommand
      *
      * @var string
      */
-    protected $signature = 'seeder:make {model : The name of the model you wish to seed.}
+    protected $signature = 'seeder:make {name : The name of the seeder.}
         {--env= : The environment to create the seeder for.}
         {--path= : The relative path from the base path to generate the seed to.}';
 
@@ -36,14 +36,13 @@ class SeederMake extends MigrateMakeCommand
      */
     public function fire(): void
     {
-        // It's possible for the developer to specify the environment for the seeder.
-        // The developer may also specify the path.
-        $model = ucfirst(trim($this->argument('model')));
+        // Get the name of the seeder
+        $name = trim($this->argument('name'));
 
         // Now we are ready to write the migration out to disk. Once we've written
-        // the migration out, we will dump-autoload for the entire framework to
-        // make sure that the migrations are registered by the class loaders.
-        $this->writeMigration($model, null, null);
+        // the seeder out, we will dump-autoload for the entire framework to
+        // make sure that the seeders are registered by the class loaders.
+        $this->writeMigration($name, null, null);
 
         $this->composer->dumpAutoloads();
     }
@@ -99,7 +98,7 @@ class SeederMake extends MigrateMakeCommand
     protected function getArguments(): array
     {
         return [
-            ['model', InputArgument::REQUIRED, 'The name of the model you wish to seed.'],
+            ['name', InputArgument::REQUIRED, 'The name of the seeder.'],
         ];
     }
 

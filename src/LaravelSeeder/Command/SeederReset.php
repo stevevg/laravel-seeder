@@ -46,7 +46,7 @@ class SeederReset extends AbstractSeederMigratorCommand
             $this->output->writeln($note);
         }
 
-        $this->line('Seeders reset for ' . ucfirst($this->getEnvironment()) . ' environment');
+        $this->info('Seeders reset for ' . ucfirst($this->getEnvironment()) . ' environment');
     }
 
     /**

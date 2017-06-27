@@ -34,6 +34,7 @@ class SeederReset extends AbstractSeederMigratorCommand
         }
 
         // Reset the migrator.
+        $this->prepareMigrator();
         $this->migrator->reset($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to

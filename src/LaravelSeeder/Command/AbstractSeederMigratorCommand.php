@@ -30,8 +30,6 @@ abstract class AbstractSeederMigratorCommand extends Command
         parent::__construct();
 
         $this->migrator = $migrator;
-
-        $this->prepareMigrator();
     }
 
     /**

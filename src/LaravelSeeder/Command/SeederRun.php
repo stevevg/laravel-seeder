@@ -33,6 +33,7 @@ class SeederRun extends AbstractSeederMigratorCommand
         }
 
         // Execute the migrator.
+        $this->prepareMigrator();
         $this->migrator->run($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to

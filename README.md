@@ -4,19 +4,6 @@ Seeding as it is currently done in Laravel is intended only for dev builds, but 
 
 What if you want to seed a production database with different data from what you use in development? What if you want to seed a table you've added to a database that is currently in production with new data?
 
-Requirements
-============
-
-- Laravel >= 5.4
-- PHP >= 7.1
-
-Installation
-============
-
-- Run ```composer require eighty8/laravel-seeder```
-- Add ```Eighty8\LaravelSeeder\SeederServiceProvider::class``` to your providers array in ```app/config/app.php```
-- Run ```php artisan vendor:publish``` to push config files to your config folder if you want to override the name of the seeds folder or the name of the table where seeds are stored
-
 Features
 ============
 
@@ -35,6 +22,19 @@ Features
 - You can run a single seed file with the --file option.
     ```php artisan seed:run --file=seed_2015_05_27_030017_UserSeeder```
 
+Requirements
+============
+
+- Laravel >= 5.4
+- PHP >= 7.1
+
+Installation
+============
+
+- Run ```composer require eighty8/laravel-seeder```
+- Add ```Eighty8\LaravelSeeder\SeederServiceProvider::class``` to your providers array in ```app/config/app.php```
+- Run ```php artisan vendor:publish``` to push config files to your config folder if you want to override the name of the seeds folder or the name of the table where seeds are stored
+
 Usage
 ============
 When you install LaravelSeeder, various artisan commands are made available to you which use the same methodology you're used to using with Migrations.
@@ -47,3 +47,22 @@ When you install LaravelSeeder, various artisan commands are made available to y
 <tr><td>seeder:refresh</td><td>Resets and re-runs all seeds.</td></tr>
 <tr><td>seeder:install</td><td>You don't have to use this... it will be run automatically when you call "seed"</td></tr>
 </table>
+
+Local Development
+============
+A Dockerfile with PHP 7.1 and Composer installed is bundled with the project to facilitate local development.
+
+To build the image:
+```
+docker build -t laravel-seeder .
+```
+
+To install Composer dependencies:
+```
+docker run -v "$PWD":/usr/local/src laravel-seeder composer install
+```
+
+To run PHPUnit tests:
+```
+docker run -v "$PWD":/usr/local/src laravel-seeder vendor/bin/phpunit
+```

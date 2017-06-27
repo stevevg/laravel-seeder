@@ -28,5 +28,10 @@
       "Eighty8\\LaravelSeeder\\": "src/LaravelSeeder"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Eighty8\\LaravelSeeder\\Tests\\": "tests/LaravelSeeder"
+    }
+  },
   "prefer-stable": true
 }

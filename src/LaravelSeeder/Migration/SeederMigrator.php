@@ -70,16 +70,6 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Set the environment to run the seeds against.
-     *
-     * @param $env
-     */
-    public function setEnvironment(string $env): void
-    {
-        $this->repository->setEnvironment($env);
-    }
-
-    /**
      * Gets the environment the seeds are ran against.
      *
      * @return string|null
@@ -100,21 +90,13 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     }
 
     /**
-     * Run the pending migrations at a given path.
+     * Set the environment to run the seeds against.
      *
-     * @param array $paths
-     * @param array $options
-     *
-     * @return array
+     * @param $env
      */
-    public function run($paths = [], array $options = [])
+    public function setEnvironment(string $env): void
     {
-        // Resolve the environment if one isn't set
-        if (!$this->hasEnvironment()) {
-            $this->setEnvironment($this->resolveEnvironment());
-        }
-
-        return parent::run($paths, $options);
+        $this->repository->setEnvironment($env);
     }
 
     /**
@@ -195,15 +177,5 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
         $this->repository->delete($seed);
 
         $this->note("<info>Rolled back:</info> $file");
-    }
-
-    /**
-     * Resolves the application's environment.
-     *
-     * @return string
-     */
-    protected function resolveEnvironment(): string
-    {
-        return App::environment();
     }
 }

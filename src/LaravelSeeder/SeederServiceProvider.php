@@ -3,7 +3,8 @@
 namespace Eighty8\LaravelSeeder;
 
 use App;
-use Eighty8\LaravelSeeder\Command\DbSeedOverride;
+use Eighty8\LaravelSeeder\Command\OverrideDbSeed;
+use Eighty8\LaravelSeeder\Command\OverrideMakeSeeder;
 use Eighty8\LaravelSeeder\Command\SeederInstall;
 use Eighty8\LaravelSeeder\Command\SeederMake;
 use Eighty8\LaravelSeeder\Command\SeederRefresh;
@@ -88,8 +89,12 @@ class SeederServiceProvider extends ServiceProvider
      */
     private function registerCommands(): void
     {
-        $this->app->bind(DbSeedOverride::class, function ($app) {
-            return new DbSeedOverride($app[SeederMigrator::class]);
+        $this->app->bind(OverrideDbSeed::class, function ($app) {
+            return new OverrideDbSeed($app[SeederMigrator::class]);
+        });
+
+        $this->app->bind(OverrideMakeSeeder::class, function ($app) {
+            return new OverrideMakeSeeder($app[SeederMigrationCreator::class], $app[Composer::class]);
         });
 
         $this->app->bind(SeederRun::class, function ($app) {
@@ -117,7 +122,8 @@ class SeederServiceProvider extends ServiceProvider
         });
 
         $this->commands([
-            DbSeedOverride::class,
+            OverrideDbSeed::class,
+            OverrideMakeSeeder::class,
             SeederRun::class,
             SeederInstall::class,
             SeederMake::class,
@@ -140,7 +146,8 @@ class SeederServiceProvider extends ServiceProvider
             SeederMigrator::class,
             SeederMigratorInterface::class,
             SeederMigrationCreator::class,
-            DbSeedOverride::class,
+            OverrideDbSeed::class,
+            OverrideMakeSeeder::class,
             SeederRun::class,
             SeederInstall::class,
             SeederMake::class,

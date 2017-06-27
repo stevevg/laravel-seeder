@@ -2,13 +2,11 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\Migration\SeederMigrator;
 use File;
-use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederRollback extends Command
+class SeederRollback extends AbstractSeederMigratorCommand
 {
     use ConfirmableTrait;
 
@@ -27,25 +25,6 @@ class SeederRollback extends Command
     protected $description = 'Rollback all database seeding';
 
     /**
-     * SeederMigrator.
-     *
-     * @var SeederMigrator
-     */
-    private $migrator;
-
-    /**
-     * Constructor.
-     *
-     * @param SeederMigrator $migrator
-     */
-    public function __construct(SeederMigrator $migrator)
-    {
-        parent::__construct();
-
-        $this->migrator = $migrator;
-    }
-
-    /**
      * Execute the console command.
      */
     public function fire(): void
@@ -54,16 +33,8 @@ class SeederRollback extends Command
             return;
         }
 
-        $env = $this->option('env');
-        $pretend = $this->input->getOption('pretend');
-
-        $this->migrator->setConnection($this->input->getOption('database'));
-
-        if (File::exists(database_path(config('seeders.dir')))) {
-            $this->migrator->setEnvironment($env);
-        }
-
-        $this->migrator->rollback($pretend);
+        // Rolls back the migrator.
+        $this->migrator->rollback($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to
         // the console screen, since the migrator itself functions without having

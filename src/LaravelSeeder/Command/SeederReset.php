@@ -2,13 +2,11 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\Migration\SeederMigrator;
 use File;
-use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederReset extends Command
+class SeederReset extends AbstractSeederMigratorCommand
 {
     use ConfirmableTrait;
 
@@ -27,78 +25,25 @@ class SeederReset extends Command
     protected $description = 'Resets all the seeders in the database';
 
     /**
-     * SeederMigrator.
-     *
-     * @var SeederMigrator
-     */
-    private $migrator;
-
-    /**
-     * Constructor.
-     *
-     * @param SeederMigrator $migrator
-     */
-    public function __construct(SeederMigrator $migrator)
-    {
-        parent::__construct();
-
-        $this->migrator = $migrator;
-    }
-
-    /**
      * Execute the console command.
      */
-    public function fire()
+    public function fire(): void
     {
         if (!$this->confirmToProceed()) {
             return;
         }
 
-        $env = $this->option('env');
-        $pretend = $this->input->getOption('pretend');
+        // Reset the migrator.
+        $this->migrator->reset($this->getMigrationPaths(), $this->getMigrationOptions());
 
-        $this->prepareDatabase();
-
-        if (File::exists(database_path(config('seeders.dir')))) {
-            $this->migrator->setEnvironment($env);
+        // Once the migrator has run we will grab the note output and send it out to
+        // the console screen, since the migrator itself functions without having
+        // any instances of the OutputInterface contract passed into the class.
+        foreach ($this->migrator->getNotes() as $note) {
+            $this->output->writeln($note);
         }
 
-        $this->migrator->setConnection($this->input->getOption('database'));
-
-        while (true) {
-            $count = $this->migrator->rollback($pretend);
-
-            // Once the migrator has run we will grab the note output and send it out to
-            // the console screen, since the migrator itself functions without having
-            // any instances of the OutputInterface contract passed into the class.
-            foreach ($this->migrator->getNotes() as $note) {
-                $this->output->writeln($note);
-            }
-
-            if ($count == 0) {
-                break;
-            }
-        }
-
-        $this->line("Seeds reset for $env");
-    }
-
-    /**
-     * Prepare the migration database for running.
-     *
-     * @return void
-     */
-    protected function prepareDatabase()
-    {
-        $this->migrator->setConnection($this->input->getOption('database'));
-
-        if (!$this->migrator->repositoryExists()) {
-            $options = [
-                '--database' => $this->input->getOption('database'),
-            ];
-
-            $this->call('seeder:install', $options);
-        }
+        $this->line('Seeders reset for ' . ucfirst($this->getEnvironment()) . ' environment');
     }
 
     /**
@@ -106,7 +51,7 @@ class SeederReset extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['env', null, InputOption::VALUE_OPTIONAL, 'The environment in which to run the seeds.', null],

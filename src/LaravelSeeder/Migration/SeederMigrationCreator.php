@@ -11,6 +11,24 @@ class SeederMigrationCreator extends MigrationCreator
     const STUB_FILE = 'MigratableSeeder.stub';
 
     /**
+     * Create a new seeder at the given path.
+     *
+     * @param  string $name
+     * @param  string $path
+     * @param  string $table
+     * @param  bool $create
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function create($name, $path, $table = null, $create = false)
+    {
+        $this->ensurePathExists($path);
+
+        return parent::create($name, $path, $table, $create);
+    }
+
+    /**
      * Ensure that a migration with the given name doesn't already exist.
      *
      * @param  string $name
@@ -75,5 +93,17 @@ class SeederMigrationCreator extends MigrationCreator
     protected function getPath($name, $path): string
     {
         return $path . DIRECTORY_SEPARATOR . $this->getDatePrefix() . '_' . $this->getClassName($name) . '.php';
+    }
+
+    /**
+     * Ensures the given path exists.
+     *
+     * @param $path
+     */
+    protected function ensurePathExists($path): void
+    {
+        if (!$this->files->exists($path)) {
+            $this->files->makeDirectory($path, 0755, true);
+        }
     }
 }

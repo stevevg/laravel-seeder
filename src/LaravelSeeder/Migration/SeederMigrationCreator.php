@@ -26,18 +26,6 @@ class SeederMigrationCreator extends MigrationCreator
     }
 
     /**
-     * Get the class name of a migration name.
-     *
-     * @param  string $name
-     *
-     * @return string
-     */
-    protected function getClassName($name): string
-    {
-        return ucwords($name) . 'Seeder';
-    }
-
-    /**
      * Populate the place-holders in the migration stub.
      *
      * @param  string $name

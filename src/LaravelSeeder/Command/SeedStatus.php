@@ -26,17 +26,17 @@ class SeedStatus extends AbstractSeedMigratorCommand
      */
     public function fire(): void
     {
-        // Prepare the migrator.
-        $this->prepareMigrator();
+        // Connect to the seeder repository.
+        $this->connectToRepository();
 
-        // Get ran seeders.
-        $ran = $this->migrator->getRepository()->getRan();
+        // Resolve the environment.
+        $this->resolveEnvironment();
 
-        if (count($migrations = $this->getStatusFor($ran)) > 0) {
-            $this->table(['Ran?', 'Migration'], $migrations);
-        } else {
-            $this->error('No migrations found');
-        }
+        // Resolve the migration paths.
+        $this->resolveMigrationPaths();
+
+        // Print the status of the seeders.
+        $this->printStatus();
     }
 
     /**
@@ -79,5 +79,19 @@ class SeedStatus extends AbstractSeedMigratorCommand
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
             ['path', null, InputOption::VALUE_OPTIONAL, 'The path of seeder files to use.'],
         ];
+    }
+
+    /**
+     * Prints the status of the seeders in the database
+     */
+    protected function printStatus(): void
+    {
+        $ran = $this->migrator->getRepository()->getRan();
+
+        if (count($migrations = $this->getStatusFor($ran)) > 0) {
+            $this->table(['Ran?', 'Seeder'], $migrations);
+        } else {
+            $this->error('No seeders found');
+        }
     }
 }

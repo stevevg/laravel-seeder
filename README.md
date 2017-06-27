@@ -1,8 +1,13 @@
 # LaravelSeeder
 
-Seeding as it is currently done in Laravel is intended only for dev builds, but what if you're iteratively creating your database and want to constantly flush it and repopulate it during development? 
+Seeding as it is currently done in Laravel is intended only for dev builds, but what if you're iteratively creating your 
+database and want to constantly flush it and repopulate it during development? 
 
-What if you want to seed a production database with different data from what you use in development? What if you want to seed a table you've added to a database that is currently in production with new data?
+What if you want to seed a production database with different data from what you use in development? What if you want to 
+seed a table you've added to a database that is currently in production with new data?
+
+LaravelSeeder takes the database migration features in Laravel and extends them to database seeders, making them "migratable". 
+All of the functionality you have grown accustomed to with Laravel migrations have been mirrored and behave similarly for seeders.
 
 Requirements
 ============
@@ -23,18 +28,8 @@ Features
 
 - Allows you to seed databases in different environments with different values.
 - Allows you to "version" seeds the same way that Laravel currently handles migrations. Running ```php artisan seed``` will only run seeds that haven't already been run.
-- Prompts you if your database is in production.
 - Allows you to run multiple seeds of the same model/table
-- Overrides Laravel's seeding commands. LaravelSeeder will fire when you run
-    ```
-    php artisan db:seed
-    ```
-     or
-    ```
-    php artisan migrate:refresh --seed
-    ```
-- You can run a single seed file with the --file option.
-    ```php artisan seed:run --file=seed_2015_05_27_030017_UserSeeder```
+- Prompts you if your database is in production
 
 Usage
 ============

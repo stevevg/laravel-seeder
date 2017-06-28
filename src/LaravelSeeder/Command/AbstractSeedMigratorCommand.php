@@ -53,7 +53,7 @@ abstract class AbstractSeedMigratorCommand extends Command
         $this->getMigrator()->setConnection($database);
 
         if (!$this->getMigrator()->repositoryExists()) {
-            $this->call('seeder:install', ['--database' => $database]);
+            $this->call('seed:install', ['--database' => $database]);
         }
     }
 

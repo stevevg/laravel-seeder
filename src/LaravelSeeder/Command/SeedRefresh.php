@@ -37,7 +37,7 @@ class SeedRefresh extends Command
         $database = $this->input->getOption('database');
         $force = $this->input->getOption('force');
 
-        $this->call('seeder:reset', [
+        $this->call('seed:reset', [
             '--database' => $database,
             '--force' => $force,
             '--env' => $env,
@@ -46,7 +46,7 @@ class SeedRefresh extends Command
         // The refresh command is essentially just a brief aggregate of a few other of
         // the migration commands and just provides a convenient wrapper to execute
         // them in succession. We'll also see if we need to re-seed the database.
-        $this->call('seeder:run', [
+        $this->call('seed:run', [
             '--database' => $database,
             '--force' => $force,
             '--env' => $env,

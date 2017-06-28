@@ -1,12 +1,12 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederRefresh extends Command
+class SeedRefresh extends Command
 {
     use ConfirmableTrait;
 
@@ -15,7 +15,7 @@ class SeederRefresh extends Command
      *
      * @var string
      */
-    protected $name = 'seeder:refresh';
+    protected $name = 'seed:refresh';
 
     /**
      * The console command description.
@@ -26,10 +26,8 @@ class SeederRefresh extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         if (!$this->confirmToProceed()) {
             return;
@@ -60,10 +58,10 @@ class SeederRefresh extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
-            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use.'],
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment to use for the seeders.'],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production.'],
         ];

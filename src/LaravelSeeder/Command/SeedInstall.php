@@ -1,31 +1,32 @@
 <?php
 
-namespace Eighty8\LaravelSeeder\Commands;
+namespace Eighty8\LaravelSeeder\Command;
 
-use Eighty8\LaravelSeeder\SeederRepository;
+use Eighty8\LaravelSeeder\Repository\SeederRepository;
+use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
-class SeederInstall extends Command
+class SeedInstall extends Command
 {
     /**
      * The console command name.
      *
      * @var string
      */
-    protected $name = 'seeder:install';
+    protected $name = 'seed:install';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create the Seeder repository';
+    protected $description = 'Create the seeder repository';
 
     /**
      * The repository instance.
      *
-     * @var \Illuminate\Database\Migrations\MigrationRepositoryInterface
+     * @var SeederRepositoryInterface
      */
     protected $repository;
 
@@ -43,16 +44,14 @@ class SeederInstall extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function fire()
+    public function fire(): void
     {
         $this->repository->setSource($this->input->getOption('database'));
 
         $this->repository->createRepository();
 
-        $this->info('Seeders table created successfully.');
+        $this->info('Seeder table created successfully.');
     }
 
     /**
@@ -60,7 +59,7 @@ class SeederInstall extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],

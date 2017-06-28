@@ -2,19 +2,24 @@
 
 namespace Eighty8\LaravelSeeder;
 
-use App;
-use Eighty8\LaravelSeeder\Commands\DbSeedOverride;
-use Eighty8\LaravelSeeder\Commands\SeederInstall;
-use Eighty8\LaravelSeeder\Commands\SeederMake;
-use Eighty8\LaravelSeeder\Commands\SeederRefresh;
-use Eighty8\LaravelSeeder\Commands\SeederReset;
-use Eighty8\LaravelSeeder\Commands\SeederRollback;
-use Eighty8\LaravelSeeder\Commands\SeederRun;
+use Eighty8\LaravelSeeder\Command\SeedInstall;
+use Eighty8\LaravelSeeder\Command\SeedMake;
+use Eighty8\LaravelSeeder\Command\SeedRefresh;
+use Eighty8\LaravelSeeder\Command\SeedReset;
+use Eighty8\LaravelSeeder\Command\SeedRollback;
+use Eighty8\LaravelSeeder\Command\SeedRun;
+use Eighty8\LaravelSeeder\Command\SeedStatus;
+use Eighty8\LaravelSeeder\Migration\SeederMigrationCreator;
+use Eighty8\LaravelSeeder\Migration\SeederMigrator;
+use Eighty8\LaravelSeeder\Migration\SeederMigratorInterface;
+use Eighty8\LaravelSeeder\Repository\SeederRepository;
+use Eighty8\LaravelSeeder\Repository\SeederRepositoryInterface;
+use Illuminate\Support\Composer;
 use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
 {
-    const SEEDERS_CONFIG_PATH = '/../../config/seeders.php';
+    const SEEDERS_CONFIG_PATH = __DIR__ . '/../../config/seeders.php';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -24,71 +29,100 @@ class SeederServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
-     * Boot.
-     *
-     * @return void
+     * Boots the service provider.
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->publishes([
-            __DIR__ . self::SEEDERS_CONFIG_PATH => config_path('seeders.php'),
-        ]);
+        $this->publishes([self::SEEDERS_CONFIG_PATH => config_path('seeders.php')]);
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . self::SEEDERS_CONFIG_PATH, 'seeders'
-        );
+        $this->mergeConfigFrom(self::SEEDERS_CONFIG_PATH, 'seeders');
 
-        $this->app->singleton('seeder.repository', function ($app) {
+        $this->registerRepository();
+
+        $this->registerMigrator();
+
+        $this->registerCommands();
+    }
+
+    /**
+     * Register the SeederRepository.
+     */
+    private function registerRepository(): void
+    {
+        $this->app->singleton(SeederRepository::class, function ($app) {
             return new SeederRepository($app['db'], config('seeders.table'));
         });
 
-        $this->app->singleton('seeder.migrator', function ($app) {
-            return new SeederMigrator($app['seeder.repository'], $app['db'], $app['files']);
+        $this->app->bind(SeederRepositoryInterface::class, function ($app) {
+            return $app[SeederRepository::class];
+        });
+    }
+
+    /**
+     * Register the SeederMigrator.
+     */
+    private function registerMigrator(): void
+    {
+        $this->app->singleton(SeederMigrator::class, function ($app) {
+            return new SeederMigrator($app[SeederRepositoryInterface::class], $app['db'], $app['files']);
         });
 
-        $this->app->bind('seeder.run', function ($app) {
-            return new SeederRun($app['seeder.migrator']);
+        $this->app->bind(SeederMigratorInterface::class, function ($app) {
+            return $app[SeederMigrator::class];
         });
 
-        $this->app->bind('seeder.install', function ($app) {
-            return new SeederInstall($app['seeder.repository']);
+        $this->app->singleton(SeederMigrationCreator::class, function ($app) {
+            return new SeederMigrationCreator($app['files']);
+        });
+    }
+
+    /**
+     * Registers the Seeder Artisan commands.
+     */
+    private function registerCommands(): void
+    {
+        $this->app->bind(SeedInstall::class, function ($app) {
+            return new SeedInstall($app[SeederRepositoryInterface::class]);
         });
 
-        $this->app->bind('seeder.make', function () {
-            return new SeederMake();
+        $this->app->bind(SeedMake::class, function ($app) {
+            return new SeedMake($app[SeederMigrationCreator::class], $app[Composer::class]);
         });
 
-        $this->app->bind('seeder.reset', function ($app) {
-            return new SeederReset($app['seeder.migrator']);
+        $this->app->bind(SeedRefresh::class, function () {
+            return new SeedRefresh();
         });
 
-        $this->app->bind('seeder.rollback', function ($app) {
-            return new SeederRollback($app['seeder.migrator']);
+        $this->app->bind(SeedReset::class, function ($app) {
+            return new SeedReset($app[SeederMigrator::class]);
         });
 
-        $this->app->bind('seeder.refresh', function () {
-            return new SeederRefresh();
+        $this->app->bind(SeedRollback::class, function ($app) {
+            return new SeedRollback($app[SeederMigrator::class]);
         });
 
-        $this->app->bind('seeder.override', function ($app) {
-            return new DbSeedOverride($app['seeder.migrator']);
+        $this->app->bind(SeedRun::class, function ($app) {
+            return new SeedRun($app[SeederMigrator::class]);
+        });
+
+        $this->app->bind(SeedStatus::class, function ($app) {
+            return new SeedStatus($app[SeederMigrator::class]);
         });
 
         $this->commands([
-            'seeder.run',
-            'seeder.install',
-            'seeder.make',
-            'seeder.reset',
-            'seeder.rollback',
-            'seeder.refresh',
+            SeedInstall::class,
+            SeedMake::class,
+            SeedRefresh::class,
+            SeedReset::class,
+            SeedRollback::class,
+            SeedRun::class,
+            SeedStatus::class,
         ]);
     }
 
@@ -97,18 +131,21 @@ class SeederServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [
-            'seeder.repository',
-            'seeder.migrator',
-            'seeder.override',
-            'seeder.run',
-            'seeder.install',
-            'seeder.make',
-            'seeder.reset',
-            'seeder.rollback',
-            'seeder.refresh',
+            SeederRepository::class,
+            SeederRepositoryInterface::class,
+            SeederMigrator::class,
+            SeederMigratorInterface::class,
+            SeederMigrationCreator::class,
+            SeedInstall::class,
+            SeedMake::class,
+            SeedRefresh::class,
+            SeedReset::class,
+            SeedRollback::class,
+            SeedRun::class,
+            SeedStatus::class,
         ];
     }
 }

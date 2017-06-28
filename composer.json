@@ -17,23 +17,24 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=7.1.0",
     "illuminate/support": "5.4.*",
     "illuminate/console": "5.4.*",
     "illuminate/database": "5.4.*",
     "illuminate/filesystem": "5.4.*"
   },
   "require-dev": {
-    "phpspec/phpspec": "~2.0",
-    "henrikbjorn/phpspec-code-coverage": "~0.2"
+    "phpunit/phpunit": "^6.2"
   },
   "autoload": {
     "psr-4": {
       "Eighty8\\LaravelSeeder\\": "src/LaravelSeeder"
     }
   },
-  "config": {
-    "bin-dir": "bin"
+  "autoload-dev": {
+    "psr-4": {
+      "Eighty8\\LaravelSeeder\\Tests\\": "tests/LaravelSeeder"
+    }
   },
   "prefer-stable": true
 }

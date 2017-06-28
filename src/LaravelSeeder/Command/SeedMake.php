@@ -28,7 +28,7 @@ class SeedMake extends MigrateMakeCommand
      *
      * @var string
      */
-    protected $signature = 'seeder:make {name : The name of the seeder.}
+    protected $signature = 'seed:make {name : The name of the seeder.}
         {--env= : The environment the seeder should be created for.}
         {--path= : The location where the seeder file should be created.}';
 

@@ -1,18 +1,19 @@
 <?php
 
 use Eighty8\LaravelSeeder\Migration\MigratableSeeder;
+use Eighty8\LaravelSeeder\Repository\DisableForeignKeysTrait;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 class {{class}} extends Seeder implements MigratableSeeder
 {
+    use DisableForeignKeysTrait;
+
     /**
      * Run the database seeder.
      */
     public function run(): void
     {
-        Model::unguard();
-
         // Seed your data
     }
 
@@ -21,8 +22,6 @@ class {{class}} extends Seeder implements MigratableSeeder
      */
     public function down(): void
     {
-        Model::unguard();
-
         // Remove your data
     }
 }

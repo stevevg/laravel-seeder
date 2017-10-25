@@ -36,5 +36,12 @@
       "Eighty8\\LaravelSeeder\\Tests\\": "tests/LaravelSeeder"
     }
   },
-  "prefer-stable": true
+  "prefer-stable": true,
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Eighty8\\LaravelSeeder\\SeederServiceProvider"
+      ]
+    }
+  }
 }

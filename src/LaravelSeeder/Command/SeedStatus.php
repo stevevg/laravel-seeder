@@ -24,7 +24,7 @@ class SeedStatus extends AbstractSeedMigratorCommand
     /**
      * Execute the console command.
      */
-    public function fire(): void
+    public function handle(): void
     {
         // Connect to the seeder repository.
         $this->connectToRepository();

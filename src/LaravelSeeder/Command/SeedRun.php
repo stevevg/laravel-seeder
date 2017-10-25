@@ -26,7 +26,7 @@ class SeedRun extends AbstractSeedMigratorCommand
     /**
      * Execute the console command.
      */
-    public function fire(): void
+    public function handle(): void
     {
         if (!$this->confirmToProceed()) {
             return;

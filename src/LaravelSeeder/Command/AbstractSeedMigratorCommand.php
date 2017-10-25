@@ -155,7 +155,7 @@ abstract class AbstractSeedMigratorCommand extends Command
     /**
      * Execute the console command.
      */
-    public abstract function fire(): void;
+    public abstract function handle(): void;
 
     /**
      * Gets the paths for the migration files to run the migrator against.

@@ -27,7 +27,7 @@ class SeedRefresh extends Command
     /**
      * Execute the console command.
      */
-    public function fire(): void
+    public function handle(): void
     {
         if (!$this->confirmToProceed()) {
             return;

@@ -45,7 +45,7 @@ class SeedInstall extends Command
     /**
      * Execute the console command.
      */
-    public function fire(): void
+    public function handle(): void
     {
         $this->repository->setSource($this->input->getOption('database'));
 

@@ -35,7 +35,7 @@ class SeedMake extends MigrateMakeCommand
     /**
      * Execute the console command.
      */
-    public function fire(): void
+    public function handle(): void
     {
         // Get the name of the seeder
         $name = trim($this->argument('name'));

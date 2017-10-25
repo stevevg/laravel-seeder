@@ -1,4 +1,5 @@
 <?php
+namespace Eighty8\LaravelSeeder\Migration;
 
 use Illuminate\Database\Seeder;
 

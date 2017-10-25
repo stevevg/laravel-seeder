@@ -233,12 +233,4 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
 
         $this->note("<info>Rolled back:</info>  {$name}");
     }
-
-  protected function pretendToRun($migration, $method)
-  {
-    foreach ($this->getQueries($migration, $method) as $query) {
-      $name = get_class($migration);
-      $this->note("<info>{$name}:</info> {$query['query']}");
-    }
-  }
 }

@@ -7,19 +7,20 @@ use InvalidArgumentException;
 
 class SeederMigrationCreator extends MigrationCreator
 {
-    const STUB_PATH = __DIR__ . '/../../../stubs';
+    const STUB_PATH = __DIR__.'/../../../stubs';
     const STUB_FILE = 'MigratableSeeder.stub';
 
     /**
      * Create a new seeder at the given path.
      *
-     * @param  string $name
-     * @param  string $path
-     * @param  string $table
-     * @param  bool $create
+     * @param string $name
+     * @param string $path
+     * @param string $table
+     * @param bool   $create
+     *
+     * @throws \Exception
      *
      * @return string
-     * @throws \Exception
      */
     public function create($name, $path, $table = null, $create = false)
     {
@@ -47,10 +48,11 @@ class SeederMigrationCreator extends MigrationCreator
     /**
      * Ensure that a migration with the given name doesn't already exist.
      *
-     * @param  string $name
-     * @return void
+     * @param string $name
      *
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     protected function ensureMigrationDoesntAlreadyExist($name): void
     {
@@ -62,9 +64,9 @@ class SeederMigrationCreator extends MigrationCreator
     /**
      * Populate the place-holders in the migration stub.
      *
-     * @param  string $name
-     * @param  string $stub
-     * @param  string $table
+     * @param string $name
+     * @param string $stub
+     * @param string $table
      *
      * @return string
      */
@@ -78,14 +80,14 @@ class SeederMigrationCreator extends MigrationCreator
     /**
      * Get the migration stub file.
      *
-     * @param  string $table
-     * @param  bool $create
+     * @param string $table
+     * @param bool   $create
      *
      * @return string
      */
     protected function getStub($table, $create): string
     {
-        return $this->files->get($this->stubPath() . DIRECTORY_SEPARATOR . self::STUB_FILE);
+        return $this->files->get($this->stubPath().DIRECTORY_SEPARATOR.self::STUB_FILE);
     }
 
     /**
@@ -101,14 +103,14 @@ class SeederMigrationCreator extends MigrationCreator
     /**
      * Get the full path to the migration.
      *
-     * @param  string $name
-     * @param  string $path
+     * @param string $name
+     * @param string $path
      *
      * @return string
      */
     protected function getPath($name, $path): string
     {
-        return $path . DIRECTORY_SEPARATOR . $this->getDatePrefix() . '_' . $this->getClassName($name) . '.php';
+        return $path.DIRECTORY_SEPARATOR.$this->getDatePrefix().'_'.$this->getClassName($name).'.php';
     }
 
     /**

@@ -8,17 +8,17 @@ trait DisableForeignKeysTrait
 {
     private $commands = [
         'mysql' => [
-            'enable' => 'SET FOREIGN_KEY_CHECKS=1;',
+            'enable'  => 'SET FOREIGN_KEY_CHECKS=1;',
             'disable' => 'SET FOREIGN_KEY_CHECKS=0;',
         ],
         'sqlite' => [
-            'enable' => 'PRAGMA foreign_keys = ON;',
+            'enable'  => 'PRAGMA foreign_keys = ON;',
             'disable' => 'PRAGMA foreign_keys = OFF;',
-        ]
+        ],
     ];
 
     /**
-     * Disable foreign key checks for current db driver
+     * Disable foreign key checks for current db driver.
      */
     protected function disableForeignKeys()
     {
@@ -26,7 +26,7 @@ trait DisableForeignKeysTrait
     }
 
     /**
-     * Return current driver disable command
+     * Return current driver disable command.
      *
      * @return mixed
      */
@@ -36,7 +36,7 @@ trait DisableForeignKeysTrait
     }
 
     /**
-     * Returns command array for current db driver
+     * Returns command array for current db driver.
      *
      * @return mixed
      */
@@ -46,7 +46,7 @@ trait DisableForeignKeysTrait
     }
 
     /**
-     * Enable foreign key checks for current db driver
+     * Enable foreign key checks for current db driver.
      */
     protected function enableForeignKeys()
     {
@@ -54,7 +54,7 @@ trait DisableForeignKeysTrait
     }
 
     /**
-     * Return current driver enable command
+     * Return current driver enable command.
      *
      * @return mixed
      */

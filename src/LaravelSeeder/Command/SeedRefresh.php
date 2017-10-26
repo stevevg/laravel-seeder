@@ -39,8 +39,8 @@ class SeedRefresh extends Command
 
         $this->call('seed:reset', [
             '--database' => $database,
-            '--force' => $force,
-            '--env' => $env,
+            '--force'    => $force,
+            '--env'      => $env,
         ]);
 
         // The refresh command is essentially just a brief aggregate of a few other of
@@ -48,8 +48,8 @@ class SeedRefresh extends Command
         // them in succession. We'll also see if we need to re-seed the database.
         $this->call('seed', [
             '--database' => $database,
-            '--force' => $force,
-            '--env' => $env,
+            '--force'    => $force,
+            '--env'      => $env,
         ]);
     }
 

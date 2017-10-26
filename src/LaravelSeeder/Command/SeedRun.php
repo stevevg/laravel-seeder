@@ -36,7 +36,7 @@ class SeedRun extends AbstractSeedMigratorCommand
         $this->prepareMigrator();
 
         // Execute the migrator.
-        $this->info('Seeding data for ' . ucfirst($this->getEnvironment()) . ' environment...');
+        $this->info('Seeding data for '.ucfirst($this->getEnvironment()).' environment...');
         $this->migrator->run($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to
@@ -46,7 +46,7 @@ class SeedRun extends AbstractSeedMigratorCommand
             $this->output->writeln($note);
         }
 
-        $this->info('Seeded data for ' . ucfirst($this->getEnvironment()) . ' environment');
+        $this->info('Seeded data for '.ucfirst($this->getEnvironment()).' environment');
     }
 
     /**

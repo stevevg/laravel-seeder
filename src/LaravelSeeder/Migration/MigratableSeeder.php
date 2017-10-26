@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 abstract class MigratableSeeder extends Seeder
 {
-
     /**
      * The name of the database connection to use.
      *
@@ -27,10 +26,10 @@ abstract class MigratableSeeder extends Seeder
     /**
      * Run the database seeder.
      */
-    public abstract function run(): void;
+    abstract public function run(): void;
 
     /**
      * Reverses the database seeder.
      */
-    public abstract function down(): void;
+    abstract public function down(): void;
 }

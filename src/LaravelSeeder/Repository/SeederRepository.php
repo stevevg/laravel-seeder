@@ -2,7 +2,6 @@
 
 namespace Eighty8\LaravelSeeder\Repository;
 
-use App;
 use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Query\Builder;
@@ -42,7 +41,7 @@ class SeederRepository implements SeederRepositoryInterface
      * Create a new database migration repository instance.
      *
      * @param ConnectionResolverInterface $resolver
-     * @param string $table
+     * @param string                      $table
      */
     public function __construct(ConnectionResolverInterface $resolver, string $table)
     {
@@ -145,17 +144,17 @@ class SeederRepository implements SeederRepositoryInterface
     /**
      * Log that a migration was run.
      *
-     * @param  string $file
-     * @param  int $batch
+     * @param string $file
+     * @param int    $batch
      *
      * @return void
      */
     public function log($file, $batch): void
     {
         $this->table()->insert([
-            'seed' => $file,
-            'env' => $this->getEnvironment(),
-            'batch' => $batch
+            'seed'  => $file,
+            'env'   => $this->getEnvironment(),
+            'batch' => $batch,
         ]);
     }
 
@@ -216,7 +215,7 @@ class SeederRepository implements SeederRepositoryInterface
     /**
      * Set the information source to gather data.
      *
-     * @param  string $name
+     * @param string $name
      */
     public function setSource($name): void
     {
@@ -226,7 +225,8 @@ class SeederRepository implements SeederRepositoryInterface
     /**
      * Get list of migrations.
      *
-     * @param  int $steps
+     * @param int $steps
+     *
      * @return array
      */
     public function getMigrations($steps): array

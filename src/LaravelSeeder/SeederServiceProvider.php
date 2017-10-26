@@ -19,7 +19,7 @@ use Illuminate\Support\ServiceProvider;
 
 class SeederServiceProvider extends ServiceProvider
 {
-    const SEEDERS_CONFIG_PATH = __DIR__ . '/../../config/seeders.php';
+    const SEEDERS_CONFIG_PATH = __DIR__.'/../../config/seeders.php';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -35,8 +35,8 @@ class SeederServiceProvider extends ServiceProvider
     {
         $this->publishes([self::SEEDERS_CONFIG_PATH => config_path('seeders.php')]);
 
-      if ($this->app->runningInConsole()) {
-        $this->commands([
+        if ($this->app->runningInConsole()) {
+            $this->commands([
           SeedInstall::class,
           SeedMake::class,
           SeedRefresh::class,
@@ -45,7 +45,7 @@ class SeederServiceProvider extends ServiceProvider
           SeedRun::class,
           SeedStatus::class,
         ]);
-      }
+        }
     }
 
     /**

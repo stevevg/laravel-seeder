@@ -2,7 +2,6 @@
 
 namespace Eighty8\LaravelSeeder\Command;
 
-use File;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -37,7 +36,7 @@ class SeedReset extends AbstractSeedMigratorCommand
         $this->prepareMigrator();
 
         // Reset the migrator.
-        $this->info('Removing seeded data for ' . ucfirst($this->getEnvironment()) . ' environment...');
+        $this->info('Removing seeded data for '.ucfirst($this->getEnvironment()).' environment...');
         $this->migrator->reset($this->getMigrationPaths(), $this->getMigrationOptions());
 
         // Once the migrator has run we will grab the note output and send it out to
@@ -47,7 +46,7 @@ class SeedReset extends AbstractSeedMigratorCommand
             $this->output->writeln($note);
         }
 
-        $this->info('Removed seeded data for ' . ucfirst($this->getEnvironment()) . ' environment');
+        $this->info('Removed seeded data for '.ucfirst($this->getEnvironment()).' environment');
     }
 
     /**

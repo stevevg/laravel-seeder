@@ -55,9 +55,9 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Create a new migrator instance.
      *
-     * @param SeederRepositoryInterface $repository
+     * @param SeederRepositoryInterface   $repository
      * @param ConnectionResolverInterface $resolver
-     * @param Filesystem $files
+     * @param Filesystem                  $files
      */
     public function __construct(
         SeederRepositoryInterface $repository,
@@ -100,9 +100,9 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Run "up" a seeder instance.
      *
-     * @param  string $file
-     * @param  int $batch
-     * @param  bool $pretend
+     * @param string $file
+     * @param int    $batch
+     * @param bool   $pretend
      */
     protected function runUp($file, $batch, $pretend): void
     {
@@ -134,7 +134,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Resolve a migration instance from a file.
      *
-     * @param  string $file
+     * @param string $file
      *
      * @return MigratableSeeder
      */
@@ -146,9 +146,9 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Reset the given migrations.
      *
-     * @param  array $migrations
-     * @param  array $paths
-     * @param  bool $pretend
+     * @param array $migrations
+     * @param array $paths
+     * @param bool  $pretend
      *
      * @return array
      */
@@ -158,7 +158,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
         // migration name, we will format the names into objects with the name as a
         // property on the objects so that we can pass it to the rollback method.
         $migrations = collect($migrations)->map(function ($m) {
-            return (object)['seed' => $m];
+            return (object) ['seed' => $m];
         })->all();
 
         return $this->rollbackMigrations(
@@ -169,9 +169,9 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Rollback the given migrations.
      *
-     * @param  array $migrations
-     * @param  array|string $paths
-     * @param  array $options
+     * @param array        $migrations
+     * @param array|string $paths
+     * @param array        $options
      *
      * @return array
      */
@@ -185,7 +185,7 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
         // which will reverse each migration in order. This getLast method on the
         // repository already returns these migration's names in reverse order.
         foreach ($migrations as $migration) {
-            $migration = (object)$migration;
+            $migration = (object) $migration;
 
             $rolledBack[] = $files[$migration->seed];
 
@@ -201,9 +201,10 @@ class SeederMigrator extends Migrator implements SeederMigratorInterface
     /**
      * Run "down" a seeder instance.
      *
-     * @param  string $file
-     * @param  object $migration
-     * @param  bool $pretend
+     * @param string $file
+     * @param object $migration
+     * @param bool   $pretend
+     *
      * @return void
      */
     protected function runDown($file, $migration, $pretend): void

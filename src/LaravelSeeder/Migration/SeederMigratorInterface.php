@@ -40,16 +40,16 @@ interface SeederMigratorInterface
     /**
      * Run an array of migrations.
      *
-     * @param  array $migrations
-     * @param  array $options
+     * @param array $migrations
+     * @param array $options
      */
     public function runPending(array $migrations, array $options = []);
 
     /**
      * Rolls all of the currently applied migrations back.
      *
-     * @param  array|string $paths
-     * @param  bool $pretend
+     * @param array|string $paths
+     * @param bool         $pretend
      *
      * @return array
      */
@@ -58,8 +58,8 @@ interface SeederMigratorInterface
     /**
      * Rollback the last migration operation.
      *
-     * @param  array|string $paths
-     * @param  array $options
+     * @param array|string $paths
+     * @param array        $options
      *
      * @return array
      */
@@ -68,7 +68,7 @@ interface SeederMigratorInterface
     /**
      * Resolve a migration instance from a file.
      *
-     * @param  string $file
+     * @param string $file
      *
      * @return MigratableSeeder
      */
@@ -84,7 +84,7 @@ interface SeederMigratorInterface
     /**
      * Set the default connection name.
      *
-     * @param  string $name
+     * @param string $name
      */
     public function setConnection($name);
 
@@ -105,7 +105,8 @@ interface SeederMigratorInterface
     /**
      * Get the name of the migration.
      *
-     * @param  string $path
+     * @param string $path
+     *
      * @return string
      */
     public function getMigrationName($path);
@@ -113,7 +114,8 @@ interface SeederMigratorInterface
     /**
      * Get all of the migration files in a given path.
      *
-     * @param  string|array $paths
+     * @param string|array $paths
+     *
      * @return array
      */
     public function getMigrationFiles($paths);

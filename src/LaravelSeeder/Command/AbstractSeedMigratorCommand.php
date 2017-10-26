@@ -114,7 +114,7 @@ abstract class AbstractSeedMigratorCommand extends Command
     {
         $pathFromConfig = database_path(config('seeders.dir'));
 
-        $pathWithEnv = $pathFromConfig . DIRECTORY_SEPARATOR . $this->getEnvironment();
+        $pathWithEnv = $pathFromConfig.DIRECTORY_SEPARATOR.$this->getEnvironment();
 
         $this->addMigrationPath($pathWithEnv);
     }
@@ -142,7 +142,7 @@ abstract class AbstractSeedMigratorCommand extends Command
     }
 
     /**
-     * Adds an option to the list of migration options
+     * Adds an option to the list of migration options.
      *
      * @param string $key
      * @param string $value
@@ -155,7 +155,7 @@ abstract class AbstractSeedMigratorCommand extends Command
     /**
      * Execute the console command.
      */
-    public abstract function handle(): void;
+    abstract public function handle(): void;
 
     /**
      * Gets the paths for the migration files to run the migrator against.

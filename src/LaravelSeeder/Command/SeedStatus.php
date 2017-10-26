@@ -42,7 +42,8 @@ class SeedStatus extends AbstractSeedMigratorCommand
     /**
      * Get the status for the given ran migrations.
      *
-     * @param  array $ran
+     * @param array $ran
+     *
      * @return \Illuminate\Support\Collection
      */
     protected function getStatusFor(array $ran)
@@ -82,7 +83,7 @@ class SeedStatus extends AbstractSeedMigratorCommand
     }
 
     /**
-     * Prints the status of the seeders in the database
+     * Prints the status of the seeders in the database.
      */
     protected function printStatus(): void
     {

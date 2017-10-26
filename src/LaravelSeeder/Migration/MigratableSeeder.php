@@ -2,15 +2,35 @@
 
 namespace Eighty8\LaravelSeeder\Migration;
 
-interface MigratableSeeder
+use Illuminate\Database\Seeder;
+
+abstract class MigratableSeeder extends Seeder
 {
+
+    /**
+     * The name of the database connection to use.
+     *
+     * @var string
+     */
+    protected $connection;
+
+    /**
+     * Get the migration connection name.
+     *
+     * @return string
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
     /**
      * Run the database seeder.
      */
-    public function run(): void;
+    public abstract function run(): void;
 
     /**
      * Reverses the database seeder.
      */
-    public function down(): void;
+    public abstract function down(): void;
 }
